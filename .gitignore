@@ -1,0 +1,30 @@
+# .gitignore
+
+# Entorno virtual
+venv/
+*.pyc
+__pycache__/
+
+# Archivos de base de datos
+db.sqlite3
+
+# Archivos de medios subidos por el usuario (si los hubiera)
+media/
+
+# Archivos de configuración con secretos (¡IMPORTANTE!)
+*.env
+.env
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Django específicos
+/static_cdn/
+/media_cdn/
+local_settings.py # Si tuvieras un archivo de configuración local
+
+# IDE específicos (si usas PyCharm, etc.)
+.idea/
+.vscode/
+
+# Logs
+*.log
