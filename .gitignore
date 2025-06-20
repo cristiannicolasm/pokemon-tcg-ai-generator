@@ -28,3 +28,8 @@ local_settings.py # Si tuvieras un archivo de configuración local
 
 # Logs
 *.log
+
+# ... otras entradas ...
+
+# Docker específicos
+.env            # Ignorar el archivo .env con credenciales

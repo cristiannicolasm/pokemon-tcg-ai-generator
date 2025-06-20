@@ -1,0 +1,34 @@
+# docker-compose.yml
+
+version: '3.8' # Especifica la versión de Docker Compose
+
+services:
+  web: # Nombre de tu servicio Django (puedes llamarlo app, backend, etc.)
+    build: . # Le dice a Docker Compose que construya la imagen desde el Dockerfile en el directorio actual
+    command: runserver 0.0.0.0:8000 # El comando que ejecuta Django
+    volumes:
+      - .:/app # Monta el directorio actual del proyecto en /app dentro del contenedor
+               # Esto permite que los cambios en tu código local se reflejen sin reconstruir la imagen
+    ports:
+      - "8000:8000" # Mapea el puerto 8000 del host al puerto 8000 del contenedor
+    depends_on: # Define una dependencia en el servicio 'db' (Django necesita la DB para funcionar)
+      - db
+    # environment: # Variables de entorno para tu aplicación Django
+      #- DATABASE_URL=postgres://user:password@db:5432/mydatabase # URL de conexión a la DB
+      # NOTA: ¡Estas credenciales son solo para desarrollo! Usa variables de entorno para producción.
+    env_file: # Puedes usar un archivo .env para tus variables de entorno si prefieres (ej. .env.dev)
+      - .env
+
+  db: # Nombre de tu servicio de base de datos PostgreSQL
+    image: postgres:14-alpine # ¡CAMBIO AQUÍ! (O podrías usar 15-alpine, 16-alpine)
+    volumes:
+      - pg_data:/var/lib/postgresql/data/ # Monta un volumen para persistir los datos de la DB
+    environment: # Variables de entorno para configurar PostgreSQL
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432" # Mapea el puerto 5432 del host al puerto 5432 del contenedor
+
+volumes: # Definición de los volúmenes nombrados
+  pg_data: # Volumen para los datos persistentes de PostgreSQL

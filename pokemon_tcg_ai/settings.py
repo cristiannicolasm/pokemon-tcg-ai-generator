@@ -104,8 +104,12 @@ WSGI_APPLICATION = 'pokemon_tcg_ai.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Cambiar a PostgreSQL
+        'NAME': 'mydatabase',    # Nombre de la DB (igual que POSTGRES_DB en docker-compose.yml)
+        'USER': 'user',          # Usuario de la DB (igual que POSTGRES_USER)
+        'PASSWORD': 'password',  # Contraseña de la DB (igual que POSTGRES_PASSWORD)
+        'HOST': 'db',            # El nombre del servicio de la DB en docker-compose
+        'PORT': '5432',          # Puerto por defecto de PostgreSQL
     }
 }
 
