@@ -24,6 +24,7 @@ Thumbs.db # Windows
 
 # Django específicos
 # Archivos generados que no deben versionarse
+# 
 /static_cdn/
 /media_cdn/
 local_settings.py
