@@ -11,6 +11,11 @@ ENV PYTHONUNBUFFERED 1
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
+# ...
+RUN apt-get update && apt-get install -y postgresql-client \
+    && rm -rf /var/lib/apt/lists/* 
+# ...
+
 # Copiar el archivo requirements.txt al directorio de trabajo
 COPY requirements.txt /app/
 

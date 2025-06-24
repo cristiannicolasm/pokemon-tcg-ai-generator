@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',              # Agregado
     'corsheaders',                 # Agregado
     'collection_manager',          # Agregado (nombre de mi app)
+    'users',                       # Nueva app
 ]
 
 # CORS CONFIGURATION
@@ -154,3 +155,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.CustomUser' # Le digo a django que use mi modelo de usuario personalizado

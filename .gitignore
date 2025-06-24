@@ -5,31 +5,26 @@ venv/
 *.pyc
 __pycache__/
 
-# Archivos de base de datos
+# Archivos de base de datos (SQLite si usaras, pero no para Postgres en Docker)
 db.sqlite3
 
-# Archivos de medios subidos por el usuario (si los hubiera)
+# Archivos de medios subidos por el usuario
 media/
 
 # Archivos de configuración con secretos (¡IMPORTANTE!)
 *.env
 .env
+# *.env # Descomentar si usas archivos como .env.development, .env.production
+
+# Sistema operativo y editor
 .DS_Store # macOS
 Thumbs.db # Windows
+.idea/    # PyCharm
+.vscode/  # VS Code
 
 # Django específicos
+# Archivos generados que no deben versionarse
 /static_cdn/
 /media_cdn/
-local_settings.py # Si tuvieras un archivo de configuración local
-
-# IDE específicos (si usas PyCharm, etc.)
-.idea/
-.vscode/
-
-# Logs
-*.log
-
-# ... otras entradas ...
-
-# Docker específicos
-.env            # Ignorar el archivo .env con credenciales
+local_settings.py
+*.log # Logs
