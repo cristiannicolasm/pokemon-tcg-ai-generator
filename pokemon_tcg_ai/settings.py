@@ -9,6 +9,15 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+#...En caso de querer cargar variables de entono de .env
+#import os
+#from dotenv import load_dotenv
+
+#load_dotenv() # Carga las variables del .env
+
+# ...
+# API_KEY = os.getenv('POKEMON_TCG_API_KEY') # Así la cargarías si la necesitaras
+# ...
 
 from pathlib import Path
 
