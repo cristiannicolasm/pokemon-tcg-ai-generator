@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 # pokemon_tcg_tracker_project/collection_manager/api_service.py
 import requests
 from .models import Expansion
@@ -58,7 +59,7 @@ def save_expansions_to_db(expansions_data):
                 logger.warning(f"Invalid release date format for {name}: {release_date}. Setting to None.")
                 release_date = None
 
-        expansion, created = Expansion.objects.update_or_create(
+        expansion, created = Expansion.objects.update_or_create( 
             api_id=api_id,
             defaults={
                 'name': name,
