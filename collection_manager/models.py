@@ -106,5 +106,5 @@ class UserCard(models.Model):
         verbose_name_plural = "User's Cards"
 
         def __str__(self):
-            return f"{self.user.username}'s {self.card.name} ({self.language}, Qty: {self.quantity})"
+            return f"{self.user.username}'s {self.card.name} ({self.language}, Qty: {self.quantity})" # pylint: disable=no-member
 
