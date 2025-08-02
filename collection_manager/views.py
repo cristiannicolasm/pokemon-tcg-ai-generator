@@ -36,3 +36,10 @@ class UserCardListView(generics.ListAPIView):
     def get_queryset(self):
         # Filtra el queryset para devolver solo las UserCards que pertenecen al usuario autenticado.
         return UserCard.objects.filter(user=self.request.user) # pylint: disable=no-member
+
+class CardDetailView(generics.RetrieveAPIView):
+    queryset = Card.objects.all() # Define el conjunto de objetos donde la vista buscará
+    serializer_class = CardSerializer # Usa el serializador que ya tienes para Card
+    lookup_field = 'api_id' # ¡IMPORTANTE! Le dice a DRF que use el campo 'api_id' del modelo Card para buscar la carta, no el 'id' por defecto.
+    permission_classes = [] # Permite el acceso sin necesidad de autenticación (son datos públicos)
+    
