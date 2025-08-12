@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ExpansionSelector = () => {
+const ExpansionSelector = ({ onSelectExpansion }) => {
   const [expansions, setExpansions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,10 +35,10 @@ const ExpansionSelector = () => {
   return (
     <div>
       <h2>Selecciona una Expansión</h2>
-      <select>
+      <select onChange={(e) => onSelectExpansion(e.target.value)}> 
         <option value="">-- Elige una expansión --</option>
         {expansions.map(expansion => (
-          <option key={expansion.id} value={expansion.id}>
+          <option key={expansion.id} value={expansion.api_id}>
             {expansion.name}
           </option>
         ))}
