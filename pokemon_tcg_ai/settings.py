@@ -53,6 +53,13 @@ INSTALLED_APPS = [
     'users',                       # Nueva app
 ]
 
+# Configuración de Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 # CORS CONFIGURATION
 CORS_ALLOW_ALL_ORIGINS = True # Para desarrollo, permite cualquier origen
 #En producción, esto debería ser False y especificar CORS_ALLOWED_ORIGINS
