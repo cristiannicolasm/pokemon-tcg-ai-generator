@@ -1,7 +1,9 @@
 # pokemon_tcg_tracker_project/collection_manager/views.py
-from rest_framework import generics, permissions
+from django.contrib.auth import get_user_model
+from rest_framework import generics, permissions, status
 from .models import Expansion, Card, UserCard
-from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer
+from rest_framework.response import Response
+from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer, UserSerializer
 
 class ExpansionListView(generics.ListAPIView):
     queryset = Expansion.objects.all() # pylint: disable=no-member
@@ -38,8 +40,14 @@ class UserCardListView(generics.ListAPIView):
         return UserCard.objects.filter(user=self.request.user) # pylint: disable=no-member
 
 class CardDetailView(generics.RetrieveAPIView):
-    queryset = Card.objects.all() # Define el conjunto de objetos donde la vista buscará
+    queryset = Card.objects.all() # pylint: disable=no-member Define el conjunto de objetos donde la vista buscará
     serializer_class = CardSerializer # Usa el serializador que ya tienes para Card
     lookup_field = 'api_id' # ¡IMPORTANTE! Le dice a DRF que use el campo 'api_id' del modelo Card para buscar la carta, no el 'id' por defecto.
     permission_classes = [] # Permite el acceso sin necesidad de autenticación (son datos públicos)
     
+User = get_user_model()
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [] # No se requiere autenticación para registrarse

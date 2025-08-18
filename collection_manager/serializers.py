@@ -1,4 +1,5 @@
 # pokemon_tcg_tracker_project/collection_manager/serializers.py
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Expansion, Card, UserCard
 
@@ -97,3 +98,21 @@ class UserCardSerializer(serializers.ModelSerializer):
         instance.notes = validated_data.get('notes', instance.notes)
         instance.save()
         return instance
+    
+# Serializador para el registro de usuarios
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True) # El campo password solo se usa para escribir, no se muestra en la respuesta
+
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email', 'password'] # Incluye los campos necesarios para el registro
+        extra_kwargs = {'password': {'write_only': True}} # Opcional: otra forma de definir write_only
+
+    def create(self, validated_data):
+        # Crea el usuario y hashea la contraseña
+        user = get_user_model().objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password']
+        )
+        return user
