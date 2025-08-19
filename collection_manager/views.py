@@ -1,9 +1,12 @@
 # pokemon_tcg_tracker_project/collection_manager/views.py
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Expansion, Card, UserCard
 from rest_framework.response import Response
 from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer, UserSerializer
+
 
 class ExpansionListView(generics.ListAPIView):
     queryset = Expansion.objects.all() # pylint: disable=no-member
@@ -23,7 +26,8 @@ class CardListView(generics.ListAPIView): # <--- AÑADE ESTO
 class UserCardCreateView(generics.CreateAPIView):
     queryset = UserCard.objects.all() # pylint: disable=no-member
     serializer_class = UserCardSerializer
-    permission_classes = [permissions.IsAuthenticated] # ¡Solo usuarios autenticados pueden usar este endpoint!
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated] # ¡Solo usuarios autenticados pueden usar este endpoint!
 
     def perform_create(self, serializer):
         # Asigna automáticamente el usuario que hizo la solicitud como el propietario de la UserCard.
@@ -33,7 +37,8 @@ class UserCardCreateView(generics.CreateAPIView):
 # Esta vista te permitirá listar todas las cartas que posee un usuario específico.
 class UserCardListView(generics.ListAPIView):
     serializer_class = UserCardSerializer
-    permission_classes = [permissions.IsAuthenticated] # Solo usuarios autenticados pueden ver su colección
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated] # Solo usuarios autenticados pueden ver su colección
 
     def get_queryset(self):
         # Filtra el queryset para devolver solo las UserCards que pertenecen al usuario autenticado.
