@@ -1,33 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import ExpansionSelector from './components/ExpansionSelector'; // <-- Importa el componente
-import CardList from './components/CardList'; // <-- Importa el nuevo componente
-
+import { useState } from 'react';
+import './App.css';
+import ExpansionSelector from './components/ExpansionSelector';
+import CardList from './components/CardList';
+import Register from './components/Register'; // <-- Importa el nuevo componente
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  // Estado para guardar el ID de la expansión seleccionada
   const [selectedExpansionId, setSelectedExpansionId] = useState(null);
+  const [currentPage, setCurrentPage] = useState('home'); // <-- Nuevo estado para la página actual
 
-  // Función que se llamará cuando el usuario cambie la selección
   const handleExpansionChange = (expansionId) => {
     setSelectedExpansionId(expansionId);
   };
 
+  // Función para cambiar a la página de registro
+  const handleGoToRegister = () => {
+    setCurrentPage('register');
+  };
+
+  // Función para volver a la página principal
+  const handleRegisterSuccess = () => {
+    setCurrentPage('home');
+    alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+  };
+
+  // Lógica de renderizado condicional
+  const renderPage = () => {
+    if (currentPage === 'register') {
+      return <Register onRegisterSuccess={handleRegisterSuccess} />;
+    }
+    // Si no es la página de registro, muestra la página principal
+    return (
+      <>
+        <h1>Pokémon TCG Tracker</h1>
+        <ExpansionSelector onSelectExpansion={handleExpansionChange} />
+        {selectedExpansionId && <CardList expansionId={selectedExpansionId} />}
+      </>
+    );
+  };
+
   return (
     <div className="App">
-      <h1>Pokémon TCG Tracker</h1>
-      <ExpansionSelector onSelectExpansion={handleExpansionChange} /> 
+      {/* Botón para cambiar a la página de registro */}
+      {currentPage !== 'register' && (
+        <button onClick={handleGoToRegister}>Ir a Registro</button>
+      )}
 
-      {/* Muestra CardList solo si una expansión ha sido seleccionada */}
-      {selectedExpansionId && <CardList expansionId={selectedExpansionId} />}
+      {/* Renderiza la página actual */}
+      {renderPage()}
     </div>
   );
 }
 
 export default App;
-
-
