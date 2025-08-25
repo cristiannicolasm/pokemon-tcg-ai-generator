@@ -61,10 +61,10 @@ REST_FRAMEWORK = {
 }
 
 # CORS CONFIGURATION
-CORS_ALLOW_ALL_ORIGINS = True # Para desarrollo, permite cualquier origen
+#CORS_ALLOW_ALL_ORIGINS = True # Para desarrollo, permite cualquier origen
 #En producción, esto debería ser False y especificar CORS_ALLOWED_ORIGINS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", #Ejemplo para tu frontend React
+    "http://localhost:5173", #Ejemplo para tu frontend React
 ]
 CORS_ALLOW_HEADERS = [
     "accept",
@@ -88,8 +88,8 @@ CORS_ALLOW_METHODS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware', # Agregado (debe ir antes de CommonMiddleware)
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
