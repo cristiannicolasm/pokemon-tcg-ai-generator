@@ -1,3 +1,4 @@
+// src/components/ExpansionSelector.jsx
 import React, { useState, useEffect } from 'react';
 
 const ExpansionSelector = ({ onSelectExpansion }) => {
@@ -6,38 +7,59 @@ const ExpansionSelector = ({ onSelectExpansion }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // La URL utiliza el proxy que configuraste en vite.config.js
-    fetch('/api/expansions/')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    const fetchExpansions = async () => {
+      try {
+        // Obtenemos el token de acceso del localStorage
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          throw new Error("No hay token de autenticación. Inicia sesión para ver las expansiones.");
         }
-        return response.json();
-      })
-      .then(data => {
+
+        const response = await fetch('http://localhost:8000/api/expansions/', {
+          method: 'GET',
+          headers: {
+            // CA1: Añadimos el encabezado de autorización con el token JWT
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        // CA3: Manejamos el error 401 si el token no es válido o ha expirado
+        if (response.status === 401) {
+          throw new Error("Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.");
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
         setExpansions(data);
+      } catch (e) {
+        console.error('Error al obtener expansiones:', e);
+        setError(e.message);
+      } finally {
         setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
-  }, []); // El array vacío asegura que este efecto se ejecute solo una vez al montar el componente
+      }
+    };
+    fetchExpansions();
+  }, []);
 
-  if (loading) {
-    return <div>Cargando expansiones...</div>;
-  }
-
-  if (error) {
-    return <div>Error al cargar las expansiones: {error.message}</div>;
-  }
+  if (loading) return <div>Cargando expansiones...</div>;
+  if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
   return (
-    <div>
-      <h2>Selecciona una Expansión</h2>
-      <select onChange={(e) => onSelectExpansion(e.target.value)}> 
-        <option value="">-- Elige una expansión --</option>
-        {expansions.map(expansion => (
+    <div className="mb-4">
+      <label htmlFor="expansion-select" className="block text-gray-700 font-bold mb-2">
+        Selecciona una Expansión:
+      </label>
+      <select
+        id="expansion-select"
+        onChange={(e) => onSelectExpansion(e.target.value)}
+        className="block w-full border border-gray-400 p-2 rounded"
+      >
+        <option value="">-- Elige una --</option>
+        {expansions.map((expansion) => (
+          // ¡Aquí está el cambio! Usamos expansion.api_id en lugar de expansion.id
           <option key={expansion.id} value={expansion.api_id}>
             {expansion.name}
           </option>

@@ -1,4 +1,4 @@
-// pokemon-tcg-frontend/src/components/CardList.jsx
+// src/components/CardList.jsx
 import React, { useState, useEffect } from 'react';
 
 const CardList = ({ expansionId }) => {
@@ -7,44 +7,63 @@ const CardList = ({ expansionId }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    // Construye la URL para el endpoint de listar cartas por expansión
-    fetch(`/api/expansions/${expansionId}/cards/`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    if (!expansionId) return;
+
+    const fetchCards = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Obtenemos el token de acceso del localStorage
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          throw new Error("No hay token de autenticación. Inicia sesión para ver las cartas.");
         }
-        return response.json();
-      })
-      .then(data => {
+
+        // ¡Esta es la línea corregida! Usamos la URL correcta del backend.
+        const response = await fetch(`http://localhost:8000/api/expansions/${expansionId}/cards/`, {
+          method: 'GET',
+          headers: {
+            // CA1: Añadimos el encabezado de autorización con el token JWT
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        // CA3: Manejamos el error 401 si el token no es válido o ha expirado
+        if (response.status === 401) {
+          // Si el token no es válido, borramos los tokens para forzar al usuario a iniciar sesión de nuevo.
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          throw new Error("Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.");
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
         setCards(data);
+      } catch (e) {
+        console.error('Error al obtener cartas:', e);
+        setError(e.message);
+      } finally {
         setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
-  }, [expansionId]); // <-- El efecto se ejecuta cada vez que 'expansionId' cambia
+      }
+    };
+    fetchCards();
+  }, [expansionId]);
 
-  if (loading) {
-    return <div>Cargando cartas...</div>;
-  }
-
-  if (error) {
-    return <div>Error al cargar las cartas: {error.message}</div>;
-  }
+  if (loading) return <div>Cargando cartas...</div>;
+  if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
   return (
-    <div>
-      <h3>Cartas en la Expansión</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-        {cards.map(card => (
-          <div key={card.id}>
-            <img src={card.large_image_url} alt={card.name} style={{ width: '150px' }} />
-            <p>{card.name}</p>
-          </div>
-        ))}
-      </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {cards.map((card) => (
+        <div key={card.id} className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
+          {/* Aquí la propiedad de la imagen ha sido corregida */}
+          <img src={card.image_url} alt={card.name} className="w-full h-auto rounded-md mb-2" />
+          <h3 className="text-sm font-semibold text-center">{card.name}</h3>
+        </div>
+      ))}
     </div>
   );
 };
