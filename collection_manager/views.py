@@ -56,3 +56,17 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [] # No se requiere autenticación para registrarse
+
+from rest_framework import generics, permissions
+from .models import UserCard
+from .serializers import UserCardSerializer
+
+class UserCardUpdateView(generics.UpdateAPIView):
+    serializer_class = UserCardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = UserCard.objects.all()
+    lookup_field = 'pk'  # O usa otro campo único si prefieres
+
+    def get_queryset(self):
+        # Solo cartas de la colección del usuario autenticado
+        return UserCard.objects.filter(user=self.request.user)
