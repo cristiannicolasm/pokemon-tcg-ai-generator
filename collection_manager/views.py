@@ -11,11 +11,11 @@ from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer
 class ExpansionListView(generics.ListAPIView):
     queryset = Expansion.objects.all() # pylint: disable=no-member
     serializer_class = ExpansionSerializer
-    permission_classes = [] # No se requiere autenticación para listar expansiones (datos públicos)
+    permission_classes = [IsAuthenticated] # No se requiere autenticación para listar expansiones (datos públicos)
 
 class CardListView(generics.ListAPIView): # <--- AÑADE ESTO
     serializer_class = CardSerializer
-    permission_classes = []
+    permission_classes = [IsAuthenticated] # No se requiere autenticación para listar cartas (datos públicos)
 
     def get_queryset(self):
         # Obtiene el api_id de la expansión desde los parámetros de la URL

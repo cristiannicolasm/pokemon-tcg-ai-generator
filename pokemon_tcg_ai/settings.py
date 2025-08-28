@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'corsheaders',                 # Agregado
     'collection_manager',          # Agregado (nombre de mi app)
     'users',                       # Nueva app
+    'pytest_django', 
 ]
 
 # Configuración de Django Rest Framework
