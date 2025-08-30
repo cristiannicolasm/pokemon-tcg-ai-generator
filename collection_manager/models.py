@@ -69,7 +69,7 @@ class UserCard(models.Model):
         ('EN', 'English'),
         ('ES', 'Spanish'),
         ('FR', 'French'),
-        ('DE', 'German'),
+        ('DE', 'German'), 
         ('IT', 'Italian'),
         ('JP', 'Japanese'),
         ('KR', 'Korean'),
