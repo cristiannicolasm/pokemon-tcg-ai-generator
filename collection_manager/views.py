@@ -60,8 +60,8 @@ class RegisterView(generics.CreateAPIView):
 class UserCardDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserCardSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = UserCard.objects.all()
+    queryset = UserCard.objects.all() # pylint: disable=no-member Define el conjunto de objetos donde la vista buscará
     lookup_field = 'pk'
 
     def get_queryset(self):
-        return UserCard.objects.filter(user=self.request.user)
+        return UserCard.objects.filter(user=self.request.user) # pylint: disable=no-member Define el conjunto de objetos donde la vista buscará
