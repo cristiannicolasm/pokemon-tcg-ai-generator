@@ -29,7 +29,7 @@ class UserCardSerializer(serializers.ModelSerializer):
         model = UserCard
         fields = [
             'id', 'card', 'quantity', 'language', 'is_holographic', 'condition',
-            'is_first_edition', 'is_signed', 'grade', 'notes'
+            'is_first_edition', 'is_signed', 'grade', 'notes', 'is_favorite'
         ]
         read_only_fields = ['id', 'card', 'user']  # No permitir cambiar el id, la carta ni el usuario
 

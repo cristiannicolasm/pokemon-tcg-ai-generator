@@ -93,6 +93,9 @@ class UserCard(models.Model):
     grade = models.CharField(max_length=10, blank=True, null=True, help_text="Professional grading score (e.g., 'PSA 10', 'BGS 9.5').")
     notes = models.TextField(blank=True, null=True, help_text="Personal notes about this specific card instance.")
 
+    is_favorite = models.BooleanField(default=False, help_text="Is this card a favorite?")
+
+
     # Timestamps para cuando la carta fue añadida/actualizada en la colección del usuario
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
