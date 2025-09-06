@@ -5,6 +5,8 @@ import ExpansionSelector from './components/ExpansionSelector';
 import CardList from './components/CardList';
 import Register from './components/Register';
 import Login from './components/Login'; // Importa el nuevo componente Login
+import AddUserCardForm from './components/AddUserCardForm';
+import UserCollection from './components/UserCollection';
 
 function App() {
   // Maneja el estado de autenticación. Si hay un token, el usuario está logueado.
@@ -54,7 +56,11 @@ function App() {
               Cerrar Sesión
             </button>
           </header>
-          <ExpansionSelector onSelectExpansion={setSelectedExpansionId} />
+          {/*Formulario para añadir carta */}
+          <AddUserCardForm token={authToken} />
+          {/* Aquí muestra la colección */}
+          <UserCollection token={authToken} />
+          {/* <ExpansionSelector onSelectExpansion={setSelectedExpansionId} /> */}
           {selectedExpansionId && <CardList expansionId={selectedExpansionId} />}
         </>
       );

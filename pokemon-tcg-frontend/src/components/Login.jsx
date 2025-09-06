@@ -1,5 +1,5 @@
-// src/components/Login.jsx
 import React, { useState } from 'react';
+import './Login.css';
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
@@ -9,14 +9,12 @@ const Login = ({ onLoginSuccess }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // CA1: Validar que los campos no estén vacíos
     if (!username || !password) {
       setMessage('Error: El nombre de usuario y la contraseña son obligatorios.');
       return;
     }
 
     try {
-      // CA2: Realizar la petición POST al endpoint de la API
       const response = await fetch('http://localhost:8000/api/token/', {
         method: 'POST',
         headers: {
@@ -27,56 +25,61 @@ const Login = ({ onLoginSuccess }) => {
 
       if (response.ok) {
         const data = await response.json();
-        // CA3: Almacenar los tokens en el localStorage
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
-        // CA4: Mostrar mensaje de éxito y limpiar campos
         setMessage('¡Inicio de sesión exitoso!');
         setUsername('');
         setPassword('');
-        // CA5: Llamar a la función del padre para la redirección
         if (onLoginSuccess) {
           onLoginSuccess(data.access);
         }
       } else {
         const data = await response.json();
-        // CA4: Mostrar mensaje de error de la API
         setMessage(`Error: ${data.detail || 'Credenciales incorrectas. Inténtalo de nuevo.'}`);
       }
     } catch (error) {
       console.error('Error de red:', error);
-      // CA4: Mostrar mensaje de error de red
       setMessage('Error de red al intentar conectar con el servidor. Verifica que el backend esté activo.');
     }
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto', textAlign: 'center' }}>
+    <div className="login-form">
+      {/* Pokébola SVG */}
+      <svg className="pokeball-icon" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="48" fill="#fff" stroke="#222" strokeWidth="4"/>
+        <path d="M2,50 a48,48 0 0,1 96,0" fill="#e3350d" stroke="#222" strokeWidth="4"/>
+        <circle cx="50" cy="50" r="18" fill="#fff" stroke="#222" strokeWidth="4"/>
+        <circle cx="50" cy="50" r="8" fill="#222"/>
+      </svg>
       <h2>Inicio de Sesión</h2>
       <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>Nombre de usuario:</label>
+        <div>
+          <label htmlFor="username">Nombre de usuario:</label>
           <input
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+            autoFocus
           />
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>Contraseña:</label>
+        <div>
+          <label htmlFor="password">Contraseña:</label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
         </div>
-        <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }}>Iniciar Sesión</button>
+        <button type="submit" className="login-btn">Iniciar Sesión</button>
       </form>
-      {message && <p style={{ marginTop: '15px', color: message.includes("Error") ? 'red' : 'green' }}>{message}</p>}
+      {message && (
+        <div className={`form-message ${message.includes("Error") ? "error" : "success"}`}>
+          {message}
+        </div>
+      )}
     </div>
   );
 };

@@ -25,13 +25,16 @@ class CardSerializer(serializers.ModelSerializer):
         ]
 
 class UserCardSerializer(serializers.ModelSerializer):
+    card_name = serializers.CharField(source='card.name', read_only=True)
+    # Si quieres también la expansión:
+    expansion_name = serializers.CharField(source='card.expansion.name', read_only=True)
     class Meta:
         model = UserCard
         fields = [
-            'id', 'card', 'quantity', 'language', 'is_holographic', 'condition',
+            'id', 'card', 'card_name', 'expansion_name', 'quantity', 'language', 'is_holographic', 'condition',
             'is_first_edition', 'is_signed', 'grade', 'notes', 'is_favorite'
         ]
-        read_only_fields = ['id', 'card', 'user']  # No permitir cambiar el id, la carta ni el usuario
+        read_only_fields = ['id', 'user']  # No permitir cambiar el id, la carta ni el usuario
 
 # Serializador para el registro de usuarios
 class UserSerializer(serializers.ModelSerializer):
