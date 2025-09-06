@@ -1,6 +1,7 @@
 # pokemon_tcg_tracker_project/collection_manager/views.py
+from django.db import IntegrityError
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Expansion, Card, UserCard
@@ -30,8 +31,12 @@ class UserCardCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated] # ¡Solo usuarios autenticados pueden usar este endpoint!
 
     def perform_create(self, serializer):
-        # Asigna automáticamente el usuario que hizo la solicitud como el propietario de la UserCard.
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError as exc:
+            raise serializers.ValidationError(
+                {"detail": "Ya tienes esta carta con esos atributos en tu colección."}
+            ) from exc
 
 # (Opcional, pero muy recomendado para la prueba y futuro)
 # Esta vista te permitirá listar todas las cartas que posee un usuario específico.
