@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./AddUserCardForm.css"; // Crea este archivo para los estilos
+import axios from '../axiosInstance';
 
 function AddUserCardForm({ token, onSuccess }) {
   const [form, setForm] = useState({
