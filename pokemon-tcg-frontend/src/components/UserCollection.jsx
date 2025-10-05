@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 
 const UserCollection = ({ token }) => {
   const [cards, setCards] = useState([]);
@@ -7,6 +7,8 @@ const UserCollection = ({ token }) => {
   const [message, setMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
+  const [expansions, setExpansions] = useState([]);
+  const [selectedExpansion, setSelectedExpansion] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -27,6 +29,12 @@ const UserCollection = ({ token }) => {
         setLoading(false);
       });
   }, [token]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/expansions/')
+      .then(res => setExpansions(res.data))
+      .catch(() => setExpansions([]));
+  }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm('¿Seguro que quieres eliminar esta carta de tu colección?')) return;
