@@ -36,10 +36,13 @@ class UserCardSerializer(serializers.ModelSerializer):
     card_name = serializers.CharField(source='card.name', read_only=True)
     expansion_name = serializers.CharField(source='card.expansion.name', read_only=True)
     expansion_id = serializers.IntegerField(source='card.expansion.id', read_only=True)
+    card_image = serializers.CharField(source='card.image_url_small', read_only=True)  # ← AGREGAR
+    
     class Meta:
         model = UserCard
         fields = [
-            'id', 'card', 'card_name', 'expansion_name', 'expansion_id', 'quantity', 'language', 'is_holographic', 'condition',
+            'id', 'card', 'card_name', 'expansion_name', 'expansion_id', 'card_image',  # ← Agregar card_image
+            'quantity', 'language', 'is_holographic', 'condition',
             'is_first_edition', 'is_signed', 'grade', 'notes', 'is_favorite'
         ]
         read_only_fields = ['id', 'user']  # No permitir cambiar el id, la carta ni el usuario

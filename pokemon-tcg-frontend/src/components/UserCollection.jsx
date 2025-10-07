@@ -32,16 +32,26 @@ const UserCollection = () => {
 
   // ← Nueva función para manejar cambio de filtro
   const handleExpansionChange = (expansionId, expansionName) => {
+    console.log('🔍 FILTRO DEBUG:', { expansionId, expansionName, tipo: typeof expansionId });
+    console.log('📦 userCards disponibles:', userCards.length);
+    
     setSelectedExpansion(expansionId);
     setSelectedExpansionName(expansionName);
-
+    
     if (expansionId === 'all') {
       setFilteredCards(userCards);
     } else {
       const filtered = userCards.filter(userCard => {
-      // Usar expansion_id que ahora viene del serializer
-      return userCard.expansion_id && userCard.expansion_id.toString() === expansionId;
-    });
+        console.log(`🔍 Carta: ${userCard.card_name}`);
+        console.log(`   expansion_id: ${userCard.expansion_id} (${typeof userCard.expansion_id})`);
+        console.log(`   buscando: ${expansionId} (${typeof expansionId})`);
+        console.log(`   toString: "${userCard.expansion_id?.toString()}" === "${expansionId.toString()}"`);
+        
+        const match = userCard.expansion_id && userCard.expansion_id.toString() === expansionId.toString();
+        console.log(`   ¿COINCIDE? ${match}`);
+        return match;
+      });
+      console.log('✅ Resultado filtrado:', filtered.length, 'cartas');
       setFilteredCards(filtered);
     }
   };
@@ -56,13 +66,12 @@ const UserCollection = () => {
       );
       setUserCards(updatedCards);
       
-      // Reaplicar el filtro
+      // ✅ ARREGLAR: Usar expansion_id consistentemente (como en handleExpansionChange)
       if (selectedExpansion === 'all') {
         setFilteredCards(updatedCards);
       } else {
         const filtered = updatedCards.filter(userCard => 
-          userCard.card && userCard.card.expansion && 
-          userCard.card.expansion.toString() === selectedExpansion
+          userCard.expansion_id && userCard.expansion_id.toString() === selectedExpansion.toString()
         );
         setFilteredCards(filtered);
       }
@@ -80,13 +89,12 @@ const UserCollection = () => {
       const updatedCards = userCards.filter(card => card.id !== cardId);
       setUserCards(updatedCards);
       
-      // Reaplicar el filtro
+      // ✅ ARREGLAR: Usar expansion_id consistentemente (como en handleExpansionChange)
       if (selectedExpansion === 'all') {
         setFilteredCards(updatedCards);
       } else {
         const filtered = updatedCards.filter(userCard => 
-          userCard.card && userCard.card.expansion && 
-          userCard.card.expansion.toString() === selectedExpansion
+          userCard.expansion_id && userCard.expansion_id.toString() === selectedExpansion.toString()
         );
         setFilteredCards(filtered);
       }

@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Expansion, Card, UserCard
 from rest_framework.response import Response
-from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer, UserSerializer
+from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer, UserSerializer, ExpansionWithCountSerializer
 
 
 class ExpansionListView(generics.ListAPIView):
@@ -74,15 +74,23 @@ class UserCardDetailView(generics.RetrieveUpdateDestroyAPIView):
         return UserCard.objects.filter(user=self.request.user) # pylint: disable=no-member Define el conjunto de objetos donde la vista buscará
     
 class UserExpansionsView(generics.ListAPIView):
-    serializer_class = ExpansionSerializer
+    serializer_class = ExpansionWithCountSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Query corregida con el related_name correcto
+        expansion_ids = UserCard.objects.filter(
+            user=self.request.user
+        ).values_list('card__expansion_id', flat=True).distinct()
+        
         user_expansions = Expansion.objects.filter(
-            cards__user_instances__user=self.request.user
-        ).distinct().annotate(
-            user_cards_count=Count('cards__user_instances', 
-                                 filter=Q(cards__user_instances__user=self.request.user))
-        )
+            id__in=expansion_ids
+        ).annotate(
+            user_cards_count=Count(
+                'cards__user_instances',  # ← CORRECTO: usar 'user_instances'
+                filter=Q(cards__user_instances__user=self.request.user)
+            )
+        ).order_by('name')
+        
         return user_expansions
