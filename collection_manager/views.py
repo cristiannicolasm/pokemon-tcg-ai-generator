@@ -1,6 +1,8 @@
 # pokemon_tcg_tracker_project/collection_manager/views.py
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
+from django.db.models import Count, Q
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics, permissions, status, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -70,3 +72,17 @@ class UserCardDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return UserCard.objects.filter(user=self.request.user) # pylint: disable=no-member Define el conjunto de objetos donde la vista buscará
+    
+class UserExpansionsView(generics.ListAPIView):
+    serializer_class = ExpansionSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_expansions = Expansion.objects.filter(
+            cards__user_instances__user=self.request.user
+        ).distinct().annotate(
+            user_cards_count=Count('cards__user_instances', 
+                                 filter=Q(cards__user_instances__user=self.request.user))
+        )
+        return user_expansions

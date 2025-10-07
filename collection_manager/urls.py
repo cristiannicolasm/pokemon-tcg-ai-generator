@@ -1,10 +1,11 @@
 # POKEMON-TCG-AI_GENERATOR/collection_manager/urls.py
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import ExpansionListView, CardListView, UserCardCreateView, UserCardListView, CardDetailView, RegisterView, UserCardDetailView
+from .views import ExpansionListView, CardListView, UserCardCreateView, UserCardListView, CardDetailView, RegisterView, UserCardDetailView, UserExpansionsView
 
 urlpatterns = [
     path('expansions/', ExpansionListView.as_view(), name='expansion-list'),
+    path('user-expansions/', UserExpansionsView.as_view(), name='user-expansions'),
     path('expansions/<str:expansion_api_id>/cards/', CardListView.as_view(), name='cards-by-expansion'),
     path('cards/<str:api_id>/', CardDetailView.as_view(), name='card-detail'),
 

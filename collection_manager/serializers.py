@@ -8,6 +8,14 @@ class ExpansionSerializer(serializers.ModelSerializer):
         model = Expansion
         fields = '__all__' # Incluye todos los campos del modelo Expansion
 
+class ExpansionWithCountSerializer(serializers.ModelSerializer):
+    """Serializer para expansiones con conteo de cartas del usuario"""
+    user_cards_count = serializers.IntegerField(read_only=True)
+    
+    class Meta:
+        model = Expansion
+        fields = ['id', 'api_id', 'name', 'series', 'symbol_url', 'user_cards_count']
+
 class CardSerializer(serializers.ModelSerializer):
     # Para incluir el nombre de la expansión directamente en la respuesta de la carta
     expansion_name = serializers.CharField(source='expansion.name', read_only=True)
@@ -26,12 +34,12 @@ class CardSerializer(serializers.ModelSerializer):
 
 class UserCardSerializer(serializers.ModelSerializer):
     card_name = serializers.CharField(source='card.name', read_only=True)
-    # Si quieres también la expansión:
     expansion_name = serializers.CharField(source='card.expansion.name', read_only=True)
+    expansion_id = serializers.IntegerField(source='card.expansion.id', read_only=True)
     class Meta:
         model = UserCard
         fields = [
-            'id', 'card', 'card_name', 'expansion_name', 'quantity', 'language', 'is_holographic', 'condition',
+            'id', 'card', 'card_name', 'expansion_name', 'expansion_id', 'quantity', 'language', 'is_holographic', 'condition',
             'is_first_edition', 'is_signed', 'grade', 'notes', 'is_favorite'
         ]
         read_only_fields = ['id', 'user']  # No permitir cambiar el id, la carta ni el usuario
