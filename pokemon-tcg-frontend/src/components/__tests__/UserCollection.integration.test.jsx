@@ -15,11 +15,11 @@ describe('UserCollection Integration Tests', () => {
       card_name: 'Charizard',
       expansion_name: 'Base Set',
       expansion_id: 1,
-      card_image: 'https://example.com/charizard.jpg',
+      card_image: 'https://images.pokemontcg.io/base1/4_hires.png', // ✅ AGREGAR
       quantity: 1,
-      language: 'EN',        // ✅ Abreviación correcta
-      condition: 'NM',       // ✅ Abreviación correcta
-      is_holographic: true,
+      language: 'EN',
+      condition: 'NM',
+      is_holofoil: true,
       is_favorite: false,
       notes: 'Beautiful card'
     },
@@ -28,26 +28,26 @@ describe('UserCollection Integration Tests', () => {
       card_name: 'Blastoise',
       expansion_name: 'Base Set',
       expansion_id: 1,
-      card_image: 'https://example.com/blastoise.jpg',
+      card_image: 'https://images.pokemontcg.io/base1/2_hires.png', // ✅ AGREGAR
       quantity: 2,
-      language: 'EN',        // ✅ Abreviación correcta
-      condition: 'LP',       // ✅ Abreviación correcta
-      is_holographic: false,
+      language: 'EN',
+      condition: 'LP',
+      is_holofoil: false,
       is_favorite: true,
-      notes: ''
+      notes: null
     },
     {
       id: 3,
       card_name: 'Vileplume',
       expansion_name: 'Jungle',
       expansion_id: 2,
-      card_image: 'https://example.com/vileplume.jpg',
+      card_image: 'https://images.pokemontcg.io/jungle/15_hires.png', // ✅ AGREGAR
       quantity: 1,
-      language: 'ES',        // ✅ Abreviación correcta
-      condition: 'NM',       // ✅ Abreviación correcta
-      is_holographic: true,
+      language: 'ES',
+      condition: 'NM',
+      is_holofoil: true,
       is_favorite: false,
-      notes: ''
+      notes: null
     }
   ];
 

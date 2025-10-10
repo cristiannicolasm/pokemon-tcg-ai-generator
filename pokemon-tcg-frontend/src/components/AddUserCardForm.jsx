@@ -120,6 +120,22 @@ useEffect(() => {
             <option key={card.id} value={card.id}>{card.name}</option>
           ))}
         </select>
+
+        {selectedCard && (
+          <div className="card-preview">
+            <img 
+              src={cards.find(card => card.id === selectedCard)?.image_url_small} 
+              alt={cards.find(card => card.id === selectedCard)?.name}
+              className="card-preview-image"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/245x342/cccccc/666666?text=No+Image';
+              }}
+            />
+            <p className="card-preview-name">
+              {cards.find(card => card.id === selectedCard)?.name}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="section">

@@ -119,3 +119,28 @@
   background: linear-gradient(90deg, #3777c2 60%, #e3350d 100%);
   border: 2px solid #3bb44a;
 }
+
+/* En AddUserCardForm.css - AGREGAR estilos para preview: */
+
+.card-preview {
+  margin-top: 1rem;
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.card-preview-image {
+  width: 150px;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card-preview-name {
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}

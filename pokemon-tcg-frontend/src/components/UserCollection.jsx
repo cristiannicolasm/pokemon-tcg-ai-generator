@@ -136,7 +136,18 @@ const UserCollection = () => {
         <div className="cards-grid">
           {filteredCards.map((userCard) => (
             <div key={userCard.id} className="user-card-item">
-              {/* ← Usar filteredCards en lugar de userCards */}
+              {/* ← AGREGAR: Sección de imagen */}
+              <div className="card-image-container">
+                <img 
+                  src={userCard.card_image} 
+                  alt={userCard.card_name}
+                  className="card-image"
+                  onError={(e) => {
+                    e.target.src = '/placeholder-card.png'; // Imagen de fallback
+                  }}
+                />
+              </div>
+              
               <div className="card-info">
                 <h3>{userCard.card_name}</h3>
                 <p><strong>Expansión:</strong> {userCard.expansion_name}</p>
