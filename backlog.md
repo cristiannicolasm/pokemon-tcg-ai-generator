@@ -3,9 +3,9 @@
 ## 📊 RESUMEN DEL PROYECTO
 
 **Total de Sprints:** 8  
-**Historias Completadas:** 31  
-**Historias en Progreso:** 0  
-**Historias Pendientes:** 46  
+**Historias Completadas:** 33  
+**Historias en Progreso:** 1  
+**Historias Pendientes:** 43  
 
 ---
 
@@ -24,7 +24,7 @@
 
 ---
 
-## ✅ SPRINT 2 - DONE
+## ✅ SPRINT 2 - DONE ✅
 
 ### Autenticación y Frontend Base
 - [x] **Acceso a Datos Protegidos de la Colección (Expansiones y Cartas)** - DONE
@@ -42,28 +42,29 @@
 - [x] **Implementación del Endpoint para Añadir Carta a la Colección (Validación API)** - DONE
 - [x] **Diseño de la Base de Datos para la Colección del Usuario** - DONE
 - [x] **Endpoint Backend para Listar Cartas de una Expansión** - DONE
-- [ ] **Pruebas funcionales de autenticación y registro** - ToDo
 
 ---
 
-## ✅ SPRINT 3 - DONE
+## ✅ SPRINT 3 - DONE ✅
 
-### Gestión de Colección y Tests Frontend
+### Gestión de Colección, Tests Frontend y Vista Agrupada
 - [x] **Endpoint Backend para Actualizar Detalles de Carta en la Colección** - DONE
 - [x] **Endpoint Backend para Eliminar Carta de la Colección** - DONE
 - [x] **Endpoint para marcar una carta de la colección como favorita** - DONE
 - [x] **Interfaz de Usuario para Añadir Carta a la Colección** - DONE
 - [x] **Interfaz de Usuario para Visualizar y Gestionar la Colección** - DONE
 - [x] **Implementación de Pruebas de Integración para Endpoints de Colección** - DONE
-- [x] **Filtrar la colección de cartas por expansión (solo expansiones presentes en mi colección)** - DONE
-- [x] **Configuración de Jest/React Testing Library para Pruebas Unitarias Frontend** - DONE
-- [ ] **Mostrar la imagen de la carta al seleccionarla al agregar una carta en el formulario y mostrar la imagen de la carta en la lista de cartas del usuario** - DOING
+- [x] **Filtrar la colección de cartas por expansión (solo expansiones presentes en mi colección)** - DONE ✅
+- [x] **Configuración de Jest/React Testing Library para Pruebas Unitarias Frontend** - DONE ✅
+- [x] **Vista Agrupada de Cartas en la Colección del Usuario (Nuevo Feature)** - DONE ✅
+- [x] **Mostrar la imagen de la carta al seleccionarla al agregar una carta en el formulario y mostrar la imagen de la carta en la lista de cartas del usuario** - DONE ✅
 
 ---
 
-## 📋 SPRINT 4 - TODO
+## 🚀 SPRINT 4 - IN PROGRESS
 
-### Reportes, Despliegue e Infraestructura de Testing
+### Tests Frontend, Reportes, Despliegue e Infraestructura
+- [ ] **Pruebas funcionales de autenticación y registro** - ToDo 🎯
 - [ ] **Backend para Reporte: Expansiones con Más Cartas** - ToDo
 - [ ] **Backend para Reporte: Cartas Más Repetidas** - ToDo
 - [ ] **Backend para Reporte: Pokemones Más Repetidos (por nombre de Pokémon)** - ToDo
@@ -158,17 +159,19 @@
 - [x] **Tests de Autorización y Seguridad (2 tests)**
 - [x] **Tests de Validación de Datos (4 tests)**
 - [x] **Tests de Integración Completa (1 test CRUD workflow)**
-- **Total:** 19 tests de integración
+- [x] **Tests de Vista Agrupada de Cartas (8 tests)** ✅ NUEVO
+- **Total:** 27 tests de integración backend
 
 ### Tests Frontend React (Sprint 3)
 - [x] **Tests de ExpansionFilter Component**
 - [x] **Tests de CardSelector Component**
 - [x] **Tests de AddCardForm Component**
-- [x] **Tests de Integración UserCollection (7 tests)**
-- **Total:** 18 tests frontend
+- [x] **Tests de Integración UserCollection (8 tests)**
+- [x] **Tests de CardDetailsModal Component (8 tests)** ✅ NUEVO
+- **Total:** 26 tests frontend
 
 ### Tests Pendientes
-- [ ] **Pruebas funcionales de autenticación y registro** - ToDo
+- [ ] **Pruebas funcionales de autenticación y registro** - ToDo (Sprint 4) 🎯
 - [ ] **Pruebas funcionales de gestión de colección** - ToDo
 - [ ] **Pruebas End-to-End con Cypress/Playwright** - ToDo
 - [ ] **Pruebas de Rendimiento Básicas** - ToDo
@@ -185,6 +188,13 @@
 - **Containerización:** Docker + Docker Compose
 - **Testing:** pytest para backend + Jest/RTL para frontend
 
+### Nuevas Features Implementadas ✅
+- **Vista Agrupada de Cartas:** Endpoint `/api/user-cards/grouped/` que agrupa cartas por tipo y expansión
+- **Modal de Detalles:** Componente `CardDetailsModal` para gestionar instancias individuales
+- **Gestión Avanzada:** Eliminación y favoritos a nivel de instancia individual
+- **Imágenes de Cartas:** Visualización de imágenes tanto en formulario como en colección
+- **Filtrado por Expansión:** Solo expansiones presentes en la colección del usuario
+
 ### Tecnologías Planificadas
 - **AWS:** EC2/ECS Fargate, RDS, CloudWatch
 - **Analytics:** BigQuery, Looker Studio
@@ -200,6 +210,7 @@
 - Enfoque en testing desde etapas tempranas del desarrollo
 - Arquitectura preparada para escalabilidad en AWS
 - Implementación gradual de features ML/AI en sprints finales
+- **Vista agrupada para mejor UX:** Cartas duplicadas se muestran como grupos con detalles expandibles
 
 ---
 
@@ -208,65 +219,44 @@
 | Sprint | Completado | Pendiente | Total | % Completado |
 |--------|------------|-----------|-------|--------------|
 | 1      | 9          | 0         | 9     | 100%         |
-| 2      | 15         | 1         | 16    | 94%          |
-| 3      | 9          | 0         | 9     | 100%         |
-| 4      | 0          | 12        | 12    | 0%           |
+| 2      | 15         | 0         | 15    | 100%         |
+| 3      | 10         | 0         | 10    | 100%         |
+| 4      | 0          | 13        | 13    | 0%           |
 | 5      | 0          | 8         | 8     | 0%           |
 | 6      | 0          | 7         | 7     | 0%           |
 | 7      | 0          | 7         | 7     | 0%           |
 | 8      | 0          | 9         | 9     | 0%           |
 
-**Total:** 33 completadas, 44 pendientes (77 historias totales)  
-**Progreso General:** 43% completado
+**Total:** 34 completadas, 44 pendientes (78 historias totales)  
+**Progreso General:** 44% completado
 
 ---
 
-## 🎯 PRÓXIMOS PASOS
+## 🎯 PRÓXIMA HISTORIA - SPRINT 4
 
-### Sprint 4 - Listo para Iniciar
-1. **Configurar SonarQube** para análisis de código
-2. **Configurar GitHub Actions** para CI (Pruebas y Linter)
-3. **Implementar reportes básicos** (expansiones, cartas repetidas)
-4. **Configurar despliegue en AWS** (cuenta, credenciales, RDS)
+### 🧪 **Historia Actual: Pruebas funcionales de autenticación y registro**
 
-### Sprint 5
-1. **Implementar Decks Ganadores** (scraping/API externa)
-2. **Búsqueda avanzada** en colección
-3. **Documentación API** con Swagger
+**Como desarrollador, quiero tener tests funcionales completos para los componentes de autenticación (Login y Register), para asegurar que el flujo de autenticación funciona correctamente y mantener la calidad del código.**
+
+**Criterios de Aceptación:**
+- **CA1:** Tests funcionales para componente Login.jsx (renderizado, validación, envío exitoso, manejo de errores)
+- **CA2:** Tests funcionales para componente Register.jsx (renderizado, validación, envío exitoso, manejo de errores)
+- **CA3:** Tests de integración para flujo completo de autenticación (registro → login → acceso a colección)
+- **CA4:** Mocking apropiado de axios y localStorage
+- **CA5:** Cobertura de tests > 90% para componentes de autenticación
+- **CA6:** Tests deben simular interacciones reales del usuario
+- **CA7:** Verificar redirecciones y manejo de estados de loading
 
 ### Comandos de Testing
 
-#### Backend Tests
+#### Comandos Backend Tests 
 - **Tests de autenticación:** `docker exec -it pokemon-tcg-ai-generator-web-1 pytest pokemon_tcg_ai/auth_api/test_auth.py -v`
 - **Tests de integración:** `docker exec -it pokemon-tcg-ai-generator-web-1 pytest collection_manager/tests/test_integration.py -v`
+- **Tests agrupados:** `docker exec -it pokemon-tcg-ai-generator-web-1 pytest collection_manager/tests/test_user_cards_grouped.py -v`
 - **Todos los tests backend:** `docker exec -it pokemon-tcg-ai-generator-web-1 pytest -v`
 
-#### Frontend Tests
+#### Comandos Frontend Tests
 - **Todos los tests frontend:** `npm test -- --watchAll=false`
-- **Tests específicos:** `npm test -- --testNamePattern="T4.1" --watchAll=false`
+- **Tests específicos de Login:** `npm test -- --testNamePattern="Login" --watchAll=false`
+- **Tests específicos de Register:** `npm test -- --testNamePattern="Register" --watchAll=false`
 - **Con coverage:** `npm test -- --watchAll=false --coverage`
-
-### Formato de ticket Jira:
-
-**Filtrar la colección de cartas por expansión (solo expansiones presentes en mi colección)**
-
-**Como usuario autenticado, quiero que el selector de expansión en mi colección muestre únicamente las expansiones de las cartas que tengo, para poder filtrar y visualizar fácilmente solo las cartas de una expansión específica o ver todas mis cartas a la vez. Así, el filtro será más útil y relevante para mi colección real.**
-
-**Criterios de aceptación (CA):**
-
-**CA1: Endpoint que devuelve solo las expansiones presentes en la colección del usuario**
-**CA2: Endpoint que filtra cartas de la colección por expansión específica**
-**CA3: Respuesta incluye información de expansión (nombre, total de cartas del usuario en esa expansión)**
-**CA4: Dropdown/selector que muestra solo expansiones con cartas en la colección**
-**CA5: Al seleccionar una expansión, se filtran las cartas mostradas**
-**CA6: Opción "Todas" para mostrar todas las cartas sin filtro**
-**CA7: Indicador visual del número de cartas por expansión**
-
-**Tests:**
-
-**T1: Tests unitarios para UserExpansionsView (endpoint /api/user-expansions/)**
-**T2: Tests de integración para filtrado de cartas por expansión**
-**T3: Tests unitarios para el componente ExpansionFilter (React)**
-**T4: Tests de integración para verificar que el filtrado funciona end-to-end**
-**T5: Cobertura de tests > 80% para nuevos componentes**
-**T6: Verificar que tests existentes siguen pasando**

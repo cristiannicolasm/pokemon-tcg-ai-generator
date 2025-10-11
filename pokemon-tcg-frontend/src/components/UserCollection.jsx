@@ -1,181 +1,170 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
-import ExpansionFilter from './ExpansionFilter';  // ← Nuevo import
+import ExpansionFilter from './ExpansionFilter';
+import CardDetailsModal from './CardDetailsModal';
 import './UserCollection.css';
 
 const UserCollection = () => {
-  const [userCards, setUserCards] = useState([]);
-  const [filteredCards, setFilteredCards] = useState([]);  // ← Nuevo estado
-  const [selectedExpansion, setSelectedExpansion] = useState('all');  // ← Nuevo estado
-  const [selectedExpansionName, setSelectedExpansionName] = useState('Todas las expansiones');  // ← Nuevo estado
+  const [groupedCards, setGroupedCards] = useState([]);
+  const [filteredCards, setFilteredCards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
+  const [selectedExpansion, setSelectedExpansion] = useState('all');
+  const [selectedExpansionName, setSelectedExpansionName] = useState('Todas');
+  const [selectedCardGroup, setSelectedCardGroup] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const fetchGroupedCards = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get('/api/user-cards/grouped/');
+      setGroupedCards(response.data);
+      setFilteredCards(response.data);
+    } catch (err) {
+      console.error('Error fetching grouped cards:', err);
+      setError('Error al cargar tu colección');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserCards = async () => {
-      try {
-        setLoading(true);
-        const response = await axiosInstance.get('/api/user-cards/');
-        setUserCards(response.data);
-        setFilteredCards(response.data);  // ← Inicializar cartas filtradas
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching user cards:', err);
-        setError('Error al cargar tu colección');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserCards();
+    fetchGroupedCards();
   }, []);
 
-  // ← Nueva función para manejar cambio de filtro
+  useEffect(() => {
+    if (selectedExpansion === 'all') {
+      setFilteredCards(groupedCards);
+      setSelectedExpansionName('Todas');
+    } else {
+      const expansionId = parseInt(selectedExpansion);
+      const filtered = groupedCards.filter(cardGroup => cardGroup.expansion_id === expansionId);
+      setFilteredCards(filtered);
+      
+      // Obtener nombre de expansión
+      if (filtered.length > 0) {
+        setSelectedExpansionName(filtered[0].expansion_name);
+      }
+    }
+  }, [selectedExpansion, groupedCards]);
+
   const handleExpansionChange = (expansionId, expansionName) => {
-    console.log('🔍 FILTRO DEBUG:', { expansionId, expansionName, tipo: typeof expansionId });
-    console.log('📦 userCards disponibles:', userCards.length);
-    
     setSelectedExpansion(expansionId);
     setSelectedExpansionName(expansionName);
-    
-    if (expansionId === 'all') {
-      setFilteredCards(userCards);
-    } else {
-      const filtered = userCards.filter(userCard => {
-        console.log(`🔍 Carta: ${userCard.card_name}`);
-        console.log(`   expansion_id: ${userCard.expansion_id} (${typeof userCard.expansion_id})`);
-        console.log(`   buscando: ${expansionId} (${typeof expansionId})`);
-        console.log(`   toString: "${userCard.expansion_id?.toString()}" === "${expansionId.toString()}"`);
-        
-        const match = userCard.expansion_id && userCard.expansion_id.toString() === expansionId.toString();
-        console.log(`   ¿COINCIDE? ${match}`);
-        return match;
+  };
+
+  const showCardDetails = (cardGroup) => {
+    setSelectedCardGroup(cardGroup);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedCardGroup(null);
+  };
+
+  const refreshData = () => {
+    fetchGroupedCards();
+  };
+
+  const toggleGroupFavorite = async (cardGroup) => {
+    try {
+      // Si alguna instancia ya es favorita, desmarcar todas; si no, marcar la primera
+      const newFavoriteStatus = !cardGroup.is_any_favorite;
+      
+      // Actualizar la primera instancia
+      const firstInstanceId = cardGroup.instances[0].id;
+      await axiosInstance.patch(`/api/user-cards/${firstInstanceId}/`, {
+        is_favorite: newFavoriteStatus
       });
-      console.log('✅ Resultado filtrado:', filtered.length, 'cartas');
-      setFilteredCards(filtered);
-    }
-  };
-
-  const handleCardUpdate = async (cardId, updatedData) => {
-    try {
-      const response = await axiosInstance.patch(`/api/user-cards/${cardId}/`, updatedData);
       
-      // Actualizar las cartas originales
-      const updatedCards = userCards.map(card => 
-        card.id === cardId ? response.data : card
-      );
-      setUserCards(updatedCards);
-      
-      // ✅ ARREGLAR: Usar expansion_id consistentemente (como en handleExpansionChange)
-      if (selectedExpansion === 'all') {
-        setFilteredCards(updatedCards);
-      } else {
-        const filtered = updatedCards.filter(userCard => 
-          userCard.expansion_id && userCard.expansion_id.toString() === selectedExpansion.toString()
-        );
-        setFilteredCards(filtered);
-      }
+      // Refrescar datos
+      refreshData();
     } catch (err) {
-      console.error('Error updating card:', err);
-      setError('Error al actualizar la carta');
+      console.error('Error updating favorite status:', err);
     }
   };
 
-  const handleCardDelete = async (cardId) => {
-    try {
-      await axiosInstance.delete(`/api/user-cards/${cardId}/`);
-      
-      // Actualizar las cartas originales
-      const updatedCards = userCards.filter(card => card.id !== cardId);
-      setUserCards(updatedCards);
-      
-      // ✅ ARREGLAR: Usar expansion_id consistentemente (como en handleExpansionChange)
-      if (selectedExpansion === 'all') {
-        setFilteredCards(updatedCards);
-      } else {
-        const filtered = updatedCards.filter(userCard => 
-          userCard.expansion_id && userCard.expansion_id.toString() === selectedExpansion.toString()
-        );
-        setFilteredCards(filtered);
-      }
-    } catch (err) {
-      console.error('Error deleting card:', err);
-      setError('Error al eliminar la carta');
-    }
-  };
+  if (loading) return <div>Cargando tu colección...</div>;
+  if (error) return <div>Error: {error}</div>;
 
-  if (loading) return <div className="loading">Cargando tu colección...</div>;
-  if (error) return <div className="error">{error}</div>;
+  // Calcular estadísticas
+  const totalCards = filteredCards.reduce((sum, group) => sum + group.total_quantity, 0);
+  const totalGroups = filteredCards.length;
 
   return (
     <div className="user-collection">
       <h2>Mi Colección Pokémon</h2>
       
-      {/* ← Nuevo componente de filtro */}
       <ExpansionFilter 
         onExpansionChange={handleExpansionChange}
         selectedExpansion={selectedExpansion}
       />
-
-      {/* ← Mostrar información del filtro actual */}
+      
       <div className="collection-info">
         <p>
-          Mostrando: <strong>{selectedExpansionName}</strong> 
-          ({filteredCards.length} carta{filteredCards.length !== 1 ? 's' : ''})
+          Mostrando: <strong>{selectedExpansionName}</strong> ({totalCards} carta{totalCards !== 1 ? 's' : ''} en {totalGroups} tipo{totalGroups !== 1 ? 's' : ''})
         </p>
       </div>
 
       {filteredCards.length === 0 ? (
         <div className="no-cards">
           {selectedExpansion === 'all' 
-            ? 'No tienes cartas en tu colección aún.'
-            : `No tienes cartas de la expansión "${selectedExpansionName}".`
-          }
+            ? 'No tienes cartas en tu colección.' 
+            : `No tienes cartas de la expansión "${selectedExpansionName}".`}
         </div>
       ) : (
         <div className="cards-grid">
-          {filteredCards.map((userCard) => (
-            <div key={userCard.id} className="user-card-item">
-              {/* ← AGREGAR: Sección de imagen */}
+          {filteredCards.map((cardGroup) => (
+            <div key={`${cardGroup.card_id}_${cardGroup.expansion_id}`} className="user-card-item">
+              {/* Imagen */}
               <div className="card-image-container">
                 <img 
-                  src={userCard.card_image} 
-                  alt={userCard.card_name}
+                  src={cardGroup.card_image} 
+                  alt={cardGroup.card_name}
                   className="card-image"
                   onError={(e) => {
-                    e.target.src = '/placeholder-card.png'; // Imagen de fallback
+                    e.target.src = 'https://via.placeholder.com/245x342/cccccc/666666?text=No+Image';
                   }}
                 />
               </div>
               
+              {/* Información resumida */}
               <div className="card-info">
-                <h3>{userCard.card_name}</h3>
-                <p><strong>Expansión:</strong> {userCard.expansion_name}</p>
-                <p><strong>Cantidad:</strong> {userCard.quantity}</p>
-                <p><strong>Idioma:</strong> {userCard.language}</p>
-                <p><strong>Condición:</strong> {userCard.condition}</p>
-                <p><strong>Holográfica:</strong> {userCard.is_holographic ? 'Sí' : 'No'}</p>
-                <p><strong>Favorita:</strong> {userCard.is_favorite ? '⭐' : '☆'}</p>
-                {userCard.notes && <p><strong>Notas:</strong> {userCard.notes}</p>}
+                <h3>{cardGroup.card_name}</h3>
+                <p><strong>Expansión:</strong> {cardGroup.expansion_name}</p>
+                <p><strong>Cantidad Total:</strong> {cardGroup.total_quantity}</p>
+                <p><strong>Instancias:</strong> {cardGroup.instances_count}</p>
+                <p><strong>Favorita:</strong> {cardGroup.is_any_favorite ? '⭐' : '☆'}</p>
               </div>
               
+              {/* Acciones */}
               <div className="card-actions">
-                <button 
-                  onClick={() => handleCardUpdate(userCard.id, { is_favorite: !userCard.is_favorite })}
-                  className={`favorite-btn ${userCard.is_favorite ? 'favorited' : ''}`}
+                <button
+                  className="details-btn"
+                  onClick={() => showCardDetails(cardGroup)}
                 >
-                  {userCard.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}
+                  VER DETALLES
                 </button>
-                <button 
-                  onClick={() => handleCardDelete(userCard.id)}
-                  className="delete-btn"
+                <button
+                  className={`favorite-btn ${cardGroup.is_any_favorite ? 'favorited' : ''}`}
+                  onClick={() => toggleGroupFavorite(cardGroup)}
                 >
-                  Eliminar
+                  {cardGroup.is_any_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}
                 </button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {/* Modal de detalles */}
+      {showModal && selectedCardGroup && (
+        <CardDetailsModal 
+          cardGroup={selectedCardGroup}
+          onClose={closeModal}
+          onUpdate={refreshData}
+        />
       )}
     </div>
   );

@@ -1,17 +1,17 @@
 .user-collection {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(34,34,34,0.10);
-  padding: 32px 36px;
-  border: 4px solid #e3350d;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .user-collection h2 {
-  color: #3777c2;
-  margin-bottom: 24px;
+  color: #e3350d;
   text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.2em;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 }
 
 .user-collection table {
@@ -47,11 +47,15 @@
 }
 
 .collection-info {
-  background-color: #e3f2fd;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  border-left: 4px solid #2196f3;
+  background: linear-gradient(90deg, #3777c2 70%, #e3350d 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: bold;
+  border: 2px solid #222;
+  box-shadow: 0 4px 12px rgba(34,34,34,0.1);
 }
 
 .collection-info p {
@@ -60,32 +64,46 @@
   font-size: 14px;
 }
 
+.expansion-filter-loading {
+  text-align: center;
+  padding: 1rem;
+  color: #3777c2;
+  font-weight: bold;
+  background: #f2f2f2;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
 .no-cards {
   text-align: center;
-  padding: 40px 20px;
-  color: #6c757d;
-  font-style: italic;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 2px dashed #dee2e6;
+  padding: 3rem;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 2px dashed #ccc;
+  font-size: 1.1em;
 }
 
 .cards-grid {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 20px;
+  gap: 1.5rem;
 }
 
 .user-card-item {
   display: flex;
-  gap: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  border: 2px solid #3777c2;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(34,34,34,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.user-card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34,34,34,0.12);
 }
 
 .card-image-container {
@@ -93,35 +111,34 @@
 }
 
 .card-image {
-  width: 120px;
+  width: 140px;
   height: auto;
-  border-radius: 4px;
+  border-radius: 8px;
   object-fit: cover;
-  border: 1px solid #eee;
+  border: 2px solid #222;
+  box-shadow: 0 4px 12px rgba(34,34,34,0.15);
 }
 
 .card-info {
   flex: 1;
-  min-width: 0; /* Para que el texto se corte si es muy largo */
-  margin-bottom: 16px;
+  min-width: 0;
 }
 
 .card-info h3 {
-  color: #3777c2;
-  margin: 0 0 12px 0;
-  font-size: 18px;
-  font-weight: 600;
+  color: #e3350d;
+  margin: 0 0 1rem 0;
+  font-size: 1.4em;
+  font-weight: bold;
 }
 
 .card-info p {
-  color: #333;  /* ← ESTO ARREGLA EL PROBLEMA DEL TEXTO BLANCO */
-  margin: 6px 0;
-  font-size: 14px;
+  margin: 0.5rem 0;
+  color: #333;
   line-height: 1.4;
 }
 
 .card-info p strong {
-  color: #222;
+  color: #3777c2;
   font-weight: 600;
 }
 
@@ -129,100 +146,106 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
   align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* ✅ NUEVO: Botón Ver Detalles */
+.details-btn {
+  background: linear-gradient(90deg, #3777c2 70%, #e3350d 100%);
+  color: white;
+  border: 2px solid #222;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  letter-spacing: 0.5px;
+}
+
+.details-btn:hover {
+  background: linear-gradient(90deg, #e3350d 70%, #3777c2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(34,34,34,0.2);
+}
+
+.favorite-btn, .delete-btn {
+  padding: 10px 16px;
+  border: 2px solid #222;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  letter-spacing: 0.5px;
 }
 
 .favorite-btn {
-  flex: 1;
-  min-width: 120px;
-  padding: 8px 12px;
-  border: 2px solid #ffc107;
-  background: #fff3cd;
-  color: #856404;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.favorite-btn:hover {
-  background: #ffc107;
-  color: #fff;
+  background: linear-gradient(90deg, #3bb44a 70%, #2e8b3e 100%);
+  color: white;
 }
 
 .favorite-btn.favorited {
-  background: #ffc107;
-  color: #fff;
+  background: linear-gradient(90deg, #ffbf00 70%, #ff9500 100%);
 }
 
-.favorite-btn.favorited:hover {
-  background: #e0a800;
+.favorite-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(34,34,34,0.2);
 }
 
 .delete-btn {
-  flex: 1;
-  min-width: 80px;
-  padding: 8px 12px;
-  border: 2px solid #dc3545;
-  background: #f8d7da;
-  color: #721c24;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  background: linear-gradient(90deg, #e3350d 70%, #cc2e0a 100%);
+  color: white;
 }
 
 .delete-btn:hover {
-  background: #dc3545;
-  color: #fff;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px 20px;
-  color: #3777c2;
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.error {
-  text-align: center;
-  padding: 20px;
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 2px solid #f5c6cb;
-  border-radius: 8px;
-  margin: 20px 0;
-  font-weight: 500;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(227,53,13,0.3);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .user-collection {
+    padding: 15px;
   }
   
   .user-card-item {
     flex-direction: column;
     text-align: center;
-    padding: 14px;
+    gap: 1rem;
   }
   
   .card-image {
-    width: 100px;
+    width: 120px;
     margin: 0 auto;
   }
   
   .card-actions {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.8rem;
   }
   
-  .favorite-btn,
-  .delete-btn {
-    min-width: auto;
+  .details-btn, .favorite-btn, .delete-btn {
+    flex: 1;
+    min-width: 100px;
+  }
+  
+  .user-collection h2 {
+    font-size: 1.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .details-btn, .favorite-btn, .delete-btn {
+    flex: none;
   }
 }

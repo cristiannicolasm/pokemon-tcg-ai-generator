@@ -9,6 +9,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Expansion, Card, UserCard
 from rest_framework.response import Response
 from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer, UserSerializer, ExpansionWithCountSerializer
+from django.shortcuts import render, get_object_or_404
 
 
 class ExpansionListView(generics.ListAPIView):
@@ -94,3 +95,69 @@ class UserExpansionsView(generics.ListAPIView):
         ).order_by('name')
         
         return user_expansions
+
+class UserCardsGroupedView(generics.GenericAPIView):
+    """
+    Vista para obtener cartas del usuario agrupadas por carta y expansión
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """
+        Agrupa cartas del usuario por carta y expansión, devolviendo información resumida
+        y todas las instancias de cada grupo
+        """
+        user_cards = UserCard.objects.filter(
+            user=request.user
+        ).select_related('card', 'card__expansion').order_by('card__name', 'card__expansion__name')
+        
+        # Agrupar por carta y expansión
+        grouped_cards = {}
+        
+        for user_card in user_cards:
+            # Crear clave única para cada combinación carta-expansión
+            key = f"{user_card.card.id}_{user_card.card.expansion.id}"
+            
+            if key not in grouped_cards:
+                grouped_cards[key] = {
+                    'card_id': user_card.card.id,
+                    'card_name': user_card.card.name,
+                    'expansion_name': user_card.card.expansion.name,
+                    'expansion_id': user_card.card.expansion.id,
+                    'card_image': user_card.card.image_url_small,
+                    'total_quantity': 0,
+                    'instances_count': 0,
+                    'is_any_favorite': False,
+                    'instances': []
+                }
+            
+            # Agregar a los totales
+            grouped_cards[key]['total_quantity'] += user_card.quantity
+            grouped_cards[key]['instances_count'] += 1
+            
+            # Si cualquier instancia es favorita, marcar el grupo como favorito
+            if user_card.is_favorite:
+                grouped_cards[key]['is_any_favorite'] = True
+            
+            # Agregar instancia individual
+            grouped_cards[key]['instances'].append({
+                'id': user_card.id,
+                'quantity': user_card.quantity,
+                'language': user_card.language,
+                'condition': user_card.condition,
+                'is_holographic': user_card.is_holographic,
+                'is_first_edition': user_card.is_first_edition,
+                'is_signed': user_card.is_signed,
+                'grade': user_card.grade,
+                'notes': user_card.notes,
+                'is_favorite': user_card.is_favorite,
+                'created_at': user_card.created_at.isoformat(),
+                'updated_at': user_card.updated_at.isoformat()
+            })
+        
+        # Convertir a lista y ordenar por nombre de carta
+        result = list(grouped_cards.values())
+        result.sort(key=lambda x: (x['expansion_name'], x['card_name']))
+        
+        return Response(result)

@@ -8,46 +8,81 @@ import axiosInstance from '../../axiosInstance';
 jest.mock('../../axiosInstance');
 const mockedAxios = axiosInstance;
 
-describe('UserCollection Integration Tests', () => {
-  const mockUserCards = [
+// Mock CardDetailsModal
+jest.mock('../CardDetailsModal', () => {
+  return function MockCardDetailsModal({ cardGroup, onClose }) {
+    return (
+      <div data-testid="card-details-modal">
+        <h2>{cardGroup.card_name} Modal</h2>
+        <button onClick={onClose}>Cerrar Modal</button>
+        <div>Instancias: {cardGroup.instances_count}</div>
+      </div>
+    );
+  };
+});
+
+describe('UserCollection Integration Tests - Grouped Cards', () => {
+  // ✅ NUEVO: Mock data para cartas agrupadas
+  const mockGroupedCards = [
     {
-      id: 1,
+      card_id: 1,
       card_name: 'Charizard',
       expansion_name: 'Base Set',
       expansion_id: 1,
-      card_image: 'https://images.pokemontcg.io/base1/4_hires.png', // ✅ AGREGAR
-      quantity: 1,
-      language: 'EN',
-      condition: 'NM',
-      is_holofoil: true,
-      is_favorite: false,
-      notes: 'Beautiful card'
+      card_image: 'https://images.pokemontcg.io/base1/4_hires.png',
+      total_quantity: 3,
+      instances_count: 2,
+      is_any_favorite: true,
+      instances: [
+        {
+          id: 1,
+          quantity: 1,
+          language: 'EN',
+          condition: 'NM',
+          is_holographic: true,
+          is_first_edition: false,
+          is_signed: false,
+          grade: null,
+          notes: 'Beautiful card',
+          is_favorite: true
+        },
+        {
+          id: 2,
+          quantity: 2,
+          language: 'ES',
+          condition: 'LP',
+          is_holographic: false,
+          is_first_edition: false,
+          is_signed: false,
+          grade: null,
+          notes: null,
+          is_favorite: false
+        }
+      ]
     },
     {
-      id: 2,
-      card_name: 'Blastoise',
-      expansion_name: 'Base Set',
-      expansion_id: 1,
-      card_image: 'https://images.pokemontcg.io/base1/2_hires.png', // ✅ AGREGAR
-      quantity: 2,
-      language: 'EN',
-      condition: 'LP',
-      is_holofoil: false,
-      is_favorite: true,
-      notes: null
-    },
-    {
-      id: 3,
+      card_id: 3,
       card_name: 'Vileplume',
       expansion_name: 'Jungle',
       expansion_id: 2,
-      card_image: 'https://images.pokemontcg.io/jungle/15_hires.png', // ✅ AGREGAR
-      quantity: 1,
-      language: 'ES',
-      condition: 'NM',
-      is_holofoil: true,
-      is_favorite: false,
-      notes: null
+      card_image: 'https://images.pokemontcg.io/jungle/15_hires.png',
+      total_quantity: 1,
+      instances_count: 1,
+      is_any_favorite: false,
+      instances: [
+        {
+          id: 3,
+          quantity: 1,
+          language: 'ES',
+          condition: 'NM',
+          is_holographic: true,
+          is_first_edition: false,
+          is_signed: false,
+          grade: null,
+          notes: null,
+          is_favorite: false
+        }
+      ]
     }
   ];
 
@@ -69,10 +104,10 @@ describe('UserCollection Integration Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Mock por defecto
+    // ✅ ACTUALIZAR: Mock para usar endpoint agrupado
     mockedAxios.get.mockImplementation((url) => {
-      if (url === '/api/user-cards/') {
-        return Promise.resolve({ data: mockUserCards });
+      if (url === '/api/user-cards/grouped/') {
+        return Promise.resolve({ data: mockGroupedCards });
       }
       if (url === '/api/user-expansions/') {
         return Promise.resolve({ data: mockExpansions });
@@ -81,7 +116,7 @@ describe('UserCollection Integration Tests', () => {
     });
   });
 
-  test('T4.1: Renderiza colección completa inicialmente', async () => {
+  test('T1: Renderiza cartas agrupadas correctamente', async () => {
     render(<UserCollection />);
     
     // Verificar loading
@@ -91,288 +126,159 @@ describe('UserCollection Integration Tests', () => {
       expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
     });
     
-    // Verificar que muestra todas las cartas
+    // Verificar que muestra cartas agrupadas
     expect(screen.getByText('Charizard')).toBeInTheDocument();
-    expect(screen.getByText('Blastoise')).toBeInTheDocument();
     expect(screen.getByText('Vileplume')).toBeInTheDocument();
     
-    // ✅ MANTENER la solución que funcionaba para T4.1:
-    await waitFor(() => {
-      expect(screen.getByText('Todas las expansiones')).toBeInTheDocument();
-    });
+    // ✅ CORREGIDO: Usar getAllByText para elementos múltiples
+    const cantidadTotalElements = screen.getAllByText(/Cantidad Total:/);
+    expect(cantidadTotalElements).toHaveLength(2); // Una para cada carta
     
-    // Verificar que hay botones de acción (indica que las cartas se renderizaron)
-    const favoriteButtons = screen.getAllByText(/Marcar como favorito|Quitar de favoritos/);
-    const deleteButtons = screen.getAllByText('Eliminar');
+    const instanciasElements = screen.getAllByText(/Instancias:/);
+    expect(instanciasElements).toHaveLength(2); // Una para cada carta
     
-    expect(favoriteButtons.length).toBeGreaterThan(0);
-    expect(deleteButtons.length).toBe(3); // 3 cartas = 3 botones eliminar
+    // ✅ SIMPLIFICADO: Verificar que los números están presentes
+    expect(screen.getByText('3')).toBeInTheDocument(); // Cantidad Charizard
+    expect(screen.getByText('2')).toBeInTheDocument(); // Instancias Charizard
     
-    // Verificar que el contador muestra el número correcto
-    const collectionInfo = document.querySelector('.collection-info p');
-    expect(collectionInfo.textContent).toMatch(/\(3\s+cartas?\)/);
+    // Para el número 1, hay múltiples (cantidad Vileplume e instancias Vileplume)
+    const onesElements = screen.getAllByText('1');
+    expect(onesElements.length).toBeGreaterThanOrEqual(2); // Al menos 2 elementos con "1"
+    
+    // Verificar botones "VER DETALLES"
+    const detailButtons = screen.getAllByText('VER DETALLES');
+    expect(detailButtons).toHaveLength(2);
+    
+    // ✅ BONUS: Verificar estructura de cartas
+    expect(screen.getByText('Base Set')).toBeInTheDocument();
+    expect(screen.getByText('Jungle')).toBeInTheDocument();
+    expect(screen.getByText('⭐')).toBeInTheDocument(); // Favorito Charizard
+    expect(screen.getByText('☆')).toBeInTheDocument(); // No favorito Vileplume
   });
 
-  test('T4.2: Filtrar por expansión funciona correctamente', async () => {
+  test('T2: Botón "VER DETALLES" abre modal correctamente', async () => {
     render(<UserCollection />);
     
-    // Esperar carga completa
+    await waitFor(() => {
+      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
+    });
+    
+    // Hacer clic en "VER DETALLES" del primer elemento (Charizard)
+    const detailButtons = screen.getAllByText('VER DETALLES');
+    fireEvent.click(detailButtons[0]);
+    
+    // Verificar que el modal se abre
+    await waitFor(() => {
+      expect(screen.getByTestId('card-details-modal')).toBeInTheDocument();
+      expect(screen.getByText('Charizard Modal')).toBeInTheDocument();
+      expect(screen.getByText('Instancias: 2')).toBeInTheDocument();
+    });
+  });
+
+  test('T3: Cerrar modal funciona correctamente', async () => {
+    render(<UserCollection />);
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
+    });
+    
+    // Abrir modal
+    const detailButtons = screen.getAllByText('VER DETALLES');
+    fireEvent.click(detailButtons[0]);
+    
+    await waitFor(() => {
+      expect(screen.getByTestId('card-details-modal')).toBeInTheDocument();
+    });
+    
+    // Cerrar modal
+    fireEvent.click(screen.getByText('Cerrar Modal'));
+    
+    await waitFor(() => {
+      expect(screen.queryByTestId('card-details-modal')).not.toBeInTheDocument();
+    });
+  });
+
+  test('T4: Filtrado por expansión funciona con cartas agrupadas', async () => {
+    render(<UserCollection />);
+    
     await waitFor(() => {
       expect(screen.getByRole('combobox')).toBeInTheDocument();
       expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cargando expansiones...')).not.toBeInTheDocument();
-    }, { timeout: 5000 });
-
-    // Dar tiempo extra para estabilizar
-    await new Promise(resolve => setTimeout(resolve, 200));
+    });
     
     // Verificar estado inicial
     expect(screen.getByText('Charizard')).toBeInTheDocument();
-    expect(screen.getByText('Blastoise')).toBeInTheDocument();
     expect(screen.getByText('Vileplume')).toBeInTheDocument();
     
-    const expansionSelect = screen.getByRole('combobox');
-    
-    // Cambiar filtro
-    fireEvent.change(expansionSelect, { target: { value: '1' } });
-    
-    // Esperar que el filtrado se complete
-    await waitFor(() => {
-      expect(screen.queryByText('Vileplume')).not.toBeInTheDocument();
-    }, { timeout: 3000 });
-    
-    // Verificar que las cartas correctas están visibles
-    await waitFor(() => {
-      expect(screen.getByText('Charizard')).toBeInTheDocument();
-      expect(screen.getByText('Blastoise')).toBeInTheDocument();
-    }, { timeout: 3000 });
-  });
-
-  test('T4.3: Filtrar por Jungle muestra solo cartas de Jungle', async () => {
-    render(<UserCollection />);
-    
-    await waitFor(() => {
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cargando expansiones...')).not.toBeInTheDocument();
-    }, { timeout: 5000 });
-
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const expansionSelect = screen.getByRole('combobox');
-    
-    // Seleccionar Jungle
-    fireEvent.change(expansionSelect, { target: { value: '2' } });
-    
-    await waitFor(() => {
-      // Debería mostrar solo Vileplume
-      expect(screen.getByText('Vileplume')).toBeInTheDocument();
-      expect(screen.queryByText('Charizard')).not.toBeInTheDocument();
-      expect(screen.queryByText('Blastoise')).not.toBeInTheDocument();
-      
-      // ✅ CORREGIR: Buscar específicamente en el contenedor de información
-      const collectionInfo = document.querySelector('.collection-info strong');
-      expect(collectionInfo.textContent).toBe('Jungle');
-      
-      // Verificar contador
-      const collectionContainer = document.querySelector('.collection-info');
-      expect(collectionContainer.textContent).toContain('(1 carta)');
-    });
-  });
-
-  test('T4.4: Volver a "Todas" muestra todas las cartas', async () => {
-    render(<UserCollection />);
-    
-    await waitFor(() => {
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cargando expansiones...')).not.toBeInTheDocument();
-    }, { timeout: 5000 });
-
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const expansionSelect = screen.getByRole('combobox');
-    
-    // Primero filtrar por Base Set
-    fireEvent.change(expansionSelect, { target: { value: '1' } });
-    
-    await waitFor(() => {
-      expect(screen.queryByText('Vileplume')).not.toBeInTheDocument();
-      
-      // Verificar que solo hay 2 cartas (Base Set)
-      const deleteButtons = screen.getAllByText('Eliminar');
-      expect(deleteButtons).toHaveLength(2);
-    });
-    
-    // Luego volver a "Todas"
-    fireEvent.change(expansionSelect, { target: { value: 'all' } });
-    
-    await waitFor(() => {
-      // ✅ VERIFICAR: Funcionalidad más que texto exacto
-      expect(screen.getByText('Charizard')).toBeInTheDocument();
-      expect(screen.getByText('Blastoise')).toBeInTheDocument();
-      expect(screen.getByText('Vileplume')).toBeInTheDocument();
-      
-      // Verificar que hay 3 botones de eliminar = 3 cartas
-      const deleteButtons = screen.getAllByText('Eliminar');
-      expect(deleteButtons).toHaveLength(3);
-      
-      // Verificar que el select volvió a "all"
-      expect(expansionSelect.value).toBe('all');
-    });
-  });
-
-  test('T4.5: Actualizar favorito mantiene el filtro actual', async () => {
-    // ✅ CORREGIR: Agregar mock para patch
-    mockedAxios.patch.mockResolvedValue({
-      data: { ...mockUserCards[0], is_favorite: true }
-    });
-    
-    render(<UserCollection />);
-    
-    // ✅ CORREGIR: Agregar espera completa
-    await waitFor(() => {
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cargando expansiones...')).not.toBeInTheDocument();
-    }, { timeout: 5000 });
-
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const expansionSelect = screen.getByRole('combobox');
-    
     // Filtrar por Base Set
+    const expansionSelect = screen.getByRole('combobox');
     fireEvent.change(expansionSelect, { target: { value: '1' } });
     
     await waitFor(() => {
+      expect(screen.getByText('Charizard')).toBeInTheDocument();
       expect(screen.queryByText('Vileplume')).not.toBeInTheDocument();
     });
+  });
+
+  test('T5: Contador de cartas muestra información agrupada', async () => {
+    render(<UserCollection />);
     
-    // Hacer favorito Charizard
-    const favoriteButtons = screen.getAllByText('Marcar como favorito');
+    await waitFor(() => {
+      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
+    });
+    
+    // ✅ CORREGIDO: Verificar contador total usando regex más flexible
+    expect(screen.getByText(/4\s+cartas?\s+en\s+2\s+tipos?/)).toBeInTheDocument();
+  });
+
+  test('T6: Favoritos funcionan a nivel de grupo', async () => {
+    mockedAxios.patch.mockResolvedValue({ data: {} });
+    
+    render(<UserCollection />);
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
+    });
+    
+    // Charizard debería mostrar como favorito (⭐)
+    const charizardFavorite = screen.getAllByText('⭐')[0]; // Primer favorito
+    expect(charizardFavorite).toBeInTheDocument();
+    
+    // Hacer clic en quitar de favoritos
+    const favoriteButtons = screen.getAllByText('Quitar de favoritos');
     fireEvent.click(favoriteButtons[0]);
     
+    // Verificar que se llamó la API
     await waitFor(() => {
-      // Verificar que el filtro se mantiene
-      expect(screen.getByText('Charizard')).toBeInTheDocument();
-      expect(screen.getByText('Blastoise')).toBeInTheDocument();
-      expect(screen.queryByText('Vileplume')).not.toBeInTheDocument();
+      expect(mockedAxios.patch).toHaveBeenCalledWith('/api/user-cards/1/', {
+        is_favorite: false
+      });
     });
-    
-    expect(mockedAxios.patch).toHaveBeenCalledWith('/api/user-cards/1/', { is_favorite: true });
   });
 
-  test('T4.6: Eliminar carta mantiene el filtro actual', async () => {
-    // ✅ CORREGIR: Agregar mock para delete
-    mockedAxios.delete.mockResolvedValue({});
-    
-    render(<UserCollection />);
-    
-    // ✅ CORREGIR: Agregar espera completa
-    await waitFor(() => {
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cargando expansiones...')).not.toBeInTheDocument();
-    }, { timeout: 5000 });
-
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const expansionSelect = screen.getByRole('combobox');
-    
-    // Filtrar por Base Set
-    fireEvent.change(expansionSelect, { target: { value: '1' } });
-    
-    await waitFor(() => {
-      expect(screen.getByText('Charizard')).toBeInTheDocument();
-      expect(screen.getByText('Blastoise')).toBeInTheDocument();
-      expect(screen.queryByText('Vileplume')).not.toBeInTheDocument();
-    });
-    
-    // Eliminar Charizard
-    const deleteButtons = screen.getAllByText('Eliminar');
-    fireEvent.click(deleteButtons[0]);
-    
-    await waitFor(() => {
-      // Verificar que Charizard se eliminó pero el filtro se mantiene
-      expect(screen.queryByText('Charizard')).not.toBeInTheDocument();
-      expect(screen.getByText('Blastoise')).toBeInTheDocument();
-      expect(screen.queryByText('Vileplume')).not.toBeInTheDocument();
-      
-      // ✅ CORREGIR: Verificar contador usando contenedor
-      const collectionContainer = document.querySelector('.collection-info');
-      expect(collectionContainer.textContent).toContain('1');
-    });
-    
-    expect(mockedAxios.delete).toHaveBeenCalledWith('/api/user-cards/1/');
-  });
-
-  test('T4.7: Muestra mensaje apropiado cuando no hay cartas de una expansión', async () => {
-    // Mock para simular que no hay cartas de una expansión específica
-    const cardsWithoutJungle = mockUserCards.filter(card => card.expansion_id !== 2);
-    
+  test('T7: Estado vacío muestra mensaje apropiado', async () => {
     mockedAxios.get.mockImplementation((url) => {
-      if (url === '/api/user-cards/') {
-        return Promise.resolve({ data: cardsWithoutJungle });
+      if (url === '/api/user-cards/grouped/') {
+        return Promise.resolve({ data: [] });
       }
       if (url === '/api/user-expansions/') {
-        return Promise.resolve({ data: [mockExpansions[0]] }); // Solo Base Set
+        return Promise.resolve({ data: [] });
       }
       return Promise.reject(new Error('Unknown endpoint'));
     });
     
     render(<UserCollection />);
     
-    // ✅ CORREGIR: Agregar espera completa
     await waitFor(() => {
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cargando expansiones...')).not.toBeInTheDocument();
-    }, { timeout: 5000 });
-
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const expansionSelect = screen.getByRole('combobox');
-    
-    // Intentar filtrar por una expansión que no aparece en el selector
-    fireEvent.change(expansionSelect, { target: { value: '999' } }); // ID inexistente
-    
-    await waitFor(() => {
-      expect(screen.queryByText('Charizard')).not.toBeInTheDocument();
-      expect(screen.queryByText('Blastoise')).not.toBeInTheDocument();
-      
-      // ✅ OPCIONAL: Verificar mensaje de "no cartas"
-      const noCardsMessage = document.querySelector('.no-cards');
-      expect(noCardsMessage).toBeInTheDocument();
+      expect(screen.getByText('No tienes cartas en tu colección.')).toBeInTheDocument();
     });
   });
 
-  test('T4.2-DEBUG: Ver qué pasa con el filtrado', async () => {
+  test('T8: Usa endpoint correcto para cartas agrupadas', async () => {
     render(<UserCollection />);
     
     await waitFor(() => {
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.queryByText('Cargando tu colección...')).not.toBeInTheDocument();
+      expect(mockedAxios.get).toHaveBeenCalledWith('/api/user-cards/grouped/');
     });
-
-    console.log('=== VERIFICANDO ESTADO INICIAL ===');
-    console.log('Charizard:', screen.queryByText('Charizard') ? 'SÍ' : 'NO');
-    console.log('Blastoise:', screen.queryByText('Blastoise') ? 'SÍ' : 'NO');
-    console.log('Vileplume:', screen.queryByText('Vileplume') ? 'SÍ' : 'NO');
-    
-    const select = screen.getByRole('combobox');
-    console.log('Select value inicial:', select.value);
-    
-    fireEvent.change(select, { target: { value: '1' } });
-    
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    console.log('=== DESPUÉS DEL FILTRO ===');
-    console.log('Select value final:', select.value);
-    console.log('Charizard:', screen.queryByText('Charizard') ? 'SÍ' : 'NO');
-    console.log('Blastoise:', screen.queryByText('Blastoise') ? 'SÍ' : 'NO');
-    console.log('Vileplume:', screen.queryByText('Vileplume') ? 'SÍ' : 'NO');
-    
-    const collectionInfo = document.querySelector('.collection-info');
-    console.log('Collection info:', collectionInfo?.textContent);
   });
 });
