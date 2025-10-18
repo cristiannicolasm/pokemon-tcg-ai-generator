@@ -5,6 +5,7 @@ const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // AÑADIR
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,6 +15,7 @@ const Login = ({ onLoginSuccess }) => {
       return;
     }
 
+    setIsLoading(true); // AÑADIR
     try {
       const response = await fetch('http://localhost:8000/api/token/', {
         method: 'POST',
@@ -40,6 +42,8 @@ const Login = ({ onLoginSuccess }) => {
     } catch (error) {
       console.error('Error de red:', error);
       setMessage('Error de red al intentar conectar con el servidor. Verifica que el backend esté activo.');
+    } finally {
+      setIsLoading(false); // AÑADIR
     }
   };
 
@@ -73,13 +77,21 @@ const Login = ({ onLoginSuccess }) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit" className="login-btn">Iniciar Sesión</button>
+        <button type="submit" className="login-btn" disabled={isLoading}>
+          {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+        </button>
       </form>
       {message && (
-        <div className={`form-message ${message.includes("Error") ? "error" : "success"}`}>
+        <div 
+          data-testid="login-message"
+          className={`form-message ${message.includes("Error") ? "error" : "success"}`}
+        >
           {message}
         </div>
       )}
+      <div className="form-links">
+        <p>¿No tienes una cuenta? <a href="/register">Regístrate aquí</a></p>
+      </div>
     </div>
   );
 };
