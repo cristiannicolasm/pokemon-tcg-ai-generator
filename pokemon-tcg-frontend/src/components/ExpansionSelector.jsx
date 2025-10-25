@@ -9,7 +9,7 @@ const ExpansionSelector = ({ onSelectExpansion }) => {
   useEffect(() => {
     const fetchExpansions = async () => {
       try {
-        // Obtenemos el token de acceso del localStorage
+        // Obtiene el token de acceso del localStorage
         const token = localStorage.getItem('access_token');
         if (!token) {
           throw new Error("No hay token de autenticación. Inicia sesión para ver las expansiones.");
@@ -18,12 +18,12 @@ const ExpansionSelector = ({ onSelectExpansion }) => {
         const response = await fetch('http://localhost:8000/api/expansions/', {
           method: 'GET',
           headers: {
-            // CA1: Añadimos el encabezado de autorización con el token JWT
+            // Añade el encabezado de autorización con el token JWT
             'Authorization': `Bearer ${token}`
           }
         });
 
-        // CA3: Manejamos el error 401 si el token no es válido o ha expirado
+        // Manejam el error 401 si el token no es válido o ha expirado
         if (response.status === 401) {
           throw new Error("Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.");
         }
@@ -59,7 +59,6 @@ const ExpansionSelector = ({ onSelectExpansion }) => {
       >
         <option value="">-- Elige una --</option>
         {expansions.map((expansion) => (
-          // ¡Aquí está el cambio! Usamos expansion.api_id en lugar de expansion.id
           <option key={expansion.id} value={expansion.api_id}>
             {expansion.name}
           </option>

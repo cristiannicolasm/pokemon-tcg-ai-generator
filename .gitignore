@@ -5,7 +5,7 @@ venv/
 *.pyc
 __pycache__/
 
-# Archivos de base de datos (SQLite si usaras, pero no para Postgres en Docker)
+# Archivos de base de datos (se usarpa SQLite, pero no para Postgres en Docker)
 db.sqlite3
 
 # Archivos de medios subidos por el usuario
@@ -14,7 +14,6 @@ media/
 # Archivos de configuración con secretos (¡IMPORTANTE!)
 *.env
 .env
-# *.env # Descomentar si usas archivos como .env.development, .env.production
 
 # Sistema operativo y editor
 .DS_Store # macOS
@@ -28,4 +27,40 @@ Thumbs.db # Windows
 /static_cdn/
 /media_cdn/
 local_settings.py
-*.log # Logs
+*.log
+
+# ========================================
+# FRONTEND - Node.js / React
+# ========================================
+pokemon-tcg-frontend/node_modules/
+pokemon-tcg-frontend/dist/
+pokemon-tcg-frontend/build/
+pokemon-tcg-frontend/.env.local
+pokemon-tcg-frontend/.env.development.local
+pokemon-tcg-frontend/.env.test.local
+pokemon-tcg-frontend/.env.production.local
+
+# ========================================
+# CYPRESS - Testing E2E
+# ========================================
+# Artifacts generados durante ejecución de tests
+pokemon-tcg-frontend/cypress/videos/
+pokemon-tcg-frontend/cypress/screenshots/
+pokemon-tcg-frontend/cypress/downloads/
+
+# Credenciales de test (no commitear)
+pokemon-tcg-frontend/cypress.env.json
+
+# Cache de Cypress
+pokemon-tcg-frontend/.cache/
+
+# Reportes de Cypress
+pokemon-tcg-frontend/cypress/reports/
+pokemon-tcg-frontend/mochawesome-report/
+
+# Documentos md
+*.md
+
+#Excepto backlog.md y readme.md
+!backlog.md
+!readme.md

@@ -10,8 +10,8 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Aquí unificamos todas las rutas de la API
-    path('api/', include('collection_manager.urls')), # <--- Deja solo esta línea para tu API
+    # Unifica todas las rutas de la API
+    path('api/', include('collection_manager.urls')), # <--- Mi API
     path('api-auth/', include('rest_framework.urls')),
     
     # URLs de Token, que deben estar en el archivo principal

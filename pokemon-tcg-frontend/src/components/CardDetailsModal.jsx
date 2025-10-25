@@ -103,6 +103,7 @@ const CardDetailsModal = ({ cardGroup, onClose, onUpdate }) => {
                         onClick={() => handleToggleFavorite(instance.id, instance.is_favorite)}
                         disabled={loading}
                         title={instance.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}
+                        data-testid={`instance-favorite-btn-${instance.id}`}
                       >
                         {instance.is_favorite ? '⭐' : '☆'}
                       </button>
@@ -111,6 +112,7 @@ const CardDetailsModal = ({ cardGroup, onClose, onUpdate }) => {
                         onClick={() => handleDeleteInstance(instance.id)}
                         disabled={loading}
                         title="Eliminar instancia"
+                        data-testid={`instance-delete-btn-${instance.id}`}
                       >
                         🗑️
                       </button>

@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el script de espera
 COPY wait-for-db.sh /usr/local/bin/
-# ¡Esta línea es crucial y ya debería estar en tu Dockerfile!
+
 RUN chmod +x /usr/local/bin/wait-for-db.sh 
 
 # Copiar todo el código de tu proyecto al directorio de trabajo

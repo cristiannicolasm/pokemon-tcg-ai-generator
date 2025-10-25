@@ -109,9 +109,10 @@ class TestUserCardsGroupedView:
         )
         
         assert charizard_group is not None
-        assert charizard_group['total_quantity'] == 3  # 1 + 2
+        assert charizard_group['total_quantity'] == 3  # Sum of quantities from two UserCard instances for Charizard: 1 (EN) + 2 (ES)
         assert charizard_group['instances_count'] == 2  # 2 instancias
-        assert charizard_group['is_any_favorite'] == True  # Una es favorita
+        assert charizard_group['is_any_favorite'] is True  # At least one instance is marked as favorite
+        # There should be two UserCard instances for Charizard
         assert len(charizard_group['instances']) == 2
     
     def test_grouped_cards_instances_details(self):

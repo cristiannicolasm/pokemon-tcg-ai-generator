@@ -151,7 +151,7 @@
   justify-content: flex-start;
 }
 
-/* ✅ NUEVO: Botón Ver Detalles */
+/* Botón Ver Detalles */
 .details-btn {
   background: linear-gradient(90deg, #3777c2 70%, #e3350d 100%);
   color: white;

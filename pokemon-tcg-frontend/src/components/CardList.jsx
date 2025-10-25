@@ -18,19 +18,18 @@ const CardList = ({ expansionId }) => {
         if (!token) {
           throw new Error("No hay token de autenticación. Inicia sesión para ver las cartas.");
         }
-
-        // ¡Esta es la línea corregida! Usamos la URL correcta del backend.
+        
         const response = await fetch(`http://localhost:8000/api/expansions/${expansionId}/cards/`, {
           method: 'GET',
           headers: {
-            // CA1: Añadimos el encabezado de autorización con el token JWT
+            // Añade el encabezado de autorización con el token JWT
             'Authorization': `Bearer ${token}`
           }
         });
 
-        // CA3: Manejamos el error 401 si el token no es válido o ha expirado
+        // Maneja el error 401 si el token no es válido o ha expirado
         if (response.status === 401) {
-          // Si el token no es válido, borramos los tokens para forzar al usuario a iniciar sesión de nuevo.
+          // Si el token no es válido, borra los tokens para forzar al usuario a iniciar sesión de nuevo.
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
           throw new Error("Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.");

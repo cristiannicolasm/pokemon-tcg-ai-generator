@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Aquí se incluyen todas las URLs de tu app 'collection_manager'
+    # Aquí se incluyen todas las URLs de la app 'collection_manager'
     path('api/', include('collection_manager.urls')),
     
     # Estas URLs de token tienen su propio path en el archivo raíz.

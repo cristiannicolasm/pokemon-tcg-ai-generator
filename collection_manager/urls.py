@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     ExpansionListView, CardListView, UserCardCreateView, UserCardListView, 
     CardDetailView, RegisterView, UserCardDetailView, UserExpansionsView,
-    UserCardsGroupedView  # ✅ AGREGAR la nueva vista
+    UserCardsGroupedView  
 )
 
 urlpatterns = [
@@ -18,7 +18,7 @@ urlpatterns = [
     path('user-cards/', UserCardListView.as_view(), name='usercard-list'),
     path('user-cards/<int:pk>/', UserCardDetailView.as_view(), name='usercard-detail'),
     
-    # ✅ NUEVA URL: Endpoint para cartas agrupadas
+    # Endpoint para cartas agrupadas
     path('user-cards/grouped/', UserCardsGroupedView.as_view(), name='user-cards-grouped'),
 
     path('register/', RegisterView.as_view(), name='auth_register'),

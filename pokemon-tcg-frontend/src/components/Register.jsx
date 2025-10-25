@@ -51,6 +51,7 @@ const Register = ({ onRegisterSuccess }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+            data-testid="register-username"
           />
         </div>
         <div style={{ marginBottom: '10px' }}>
@@ -63,6 +64,7 @@ const Register = ({ onRegisterSuccess }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+            data-testid="register-email"
           />
         </div>
         <div style={{ marginBottom: '10px' }}>
@@ -75,12 +77,14 @@ const Register = ({ onRegisterSuccess }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+            data-testid="register-password"
           />
         </div>
         <button 
           type="submit" 
           style={{ padding: '10px 20px', cursor: 'pointer' }}
           disabled={isLoading}
+          data-testid="register-submit"
         >
           {isLoading ? 'Registrando...' : 'Registrar'}
         </button>

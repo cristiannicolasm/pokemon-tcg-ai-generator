@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./AddUserCardForm.css"; // Crea este archivo para los estilos
+import "./AddUserCardForm.css"; 
 import axios from '../axiosInstance';
 
 function AddUserCardForm({ token, onSuccess }) {
@@ -99,7 +99,12 @@ useEffect(() => {
       <div className="section">
         <div className="section-title">Información de la Carta</div>
         <label>Expansión:</label>
-        <select value={selectedExpansion} onChange={e => setSelectedExpansion(e.target.value)} required>
+        <select
+          value={selectedExpansion}
+          onChange={e => setSelectedExpansion(e.target.value)}
+          required
+          data-testid="addcard-expansion-select"
+        >
           <option value="">Selecciona una expansión</option>
           {expansions.map(exp => (
             <option key={exp.api_id} value={exp.api_id}>{exp.name}</option>
@@ -114,6 +119,7 @@ useEffect(() => {
             setSelectedCard(value ? Number(value) : null);
           }}
           required
+          data-testid="addcard-card-select"
         >
           <option value="">Selecciona una carta</option>
           {cards.map(card => (
@@ -141,7 +147,15 @@ useEffect(() => {
       <div className="section">
         <div className="section-title">Atributos Físicos</div>
         <label>Cantidad:</label>
-        <input type="number" name="quantity" min="1" value={form.quantity} onChange={handleChange} required />
+        <input
+          type="number"
+          name="quantity"
+          min="1"
+          value={form.quantity}
+          onChange={handleChange}
+          required
+          data-testid="addcard-quantity"
+        />
 
         <label>Idioma:</label>
         <select name="language" value={form.language} onChange={handleChange}>
@@ -191,7 +205,9 @@ useEffect(() => {
       </div>
 
       {message && <div className="form-message">{message}</div>}
-      <button className="submit-btn" type="submit">Añadir carta</button>
+      <button className="submit-btn" type="submit" data-testid="addcard-submit">
+        Añadir carta
+      </button>
     </form>
   );
 }

@@ -116,7 +116,7 @@ const UserCollection = () => {
       ) : (
         <div className="cards-grid">
           {filteredCards.map((cardGroup) => (
-            <div key={`${cardGroup.card_id}_${cardGroup.expansion_id}`} className="user-card-item">
+            <div key={`${cardGroup.card_id}_${cardGroup.expansion_id}`} className="user-card-item" data-testid="usercard-item">
               {/* Imagen */}
               <div className="card-image-container">
                 <img 
@@ -143,12 +143,14 @@ const UserCollection = () => {
                 <button
                   className="details-btn"
                   onClick={() => showCardDetails(cardGroup)}
+                  data-testid="usercard-details-btn"
                 >
                   VER DETALLES
                 </button>
                 <button
                   className={`favorite-btn ${cardGroup.is_any_favorite ? 'favorited' : ''}`}
                   onClick={() => toggleGroupFavorite(cardGroup)}
+                  data-testid="usercard-favorite-btn"
                 >
                   {cardGroup.is_any_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}
                 </button>

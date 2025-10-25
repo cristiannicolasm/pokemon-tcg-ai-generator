@@ -11,7 +11,7 @@ class ExpansionSerializer(serializers.ModelSerializer):
 class ExpansionWithCountSerializer(serializers.ModelSerializer):
     """Serializer para expansiones con conteo de cartas del usuario"""
     user_cards_count = serializers.IntegerField(read_only=True)
-    
+     
     class Meta:
         model = Expansion
         fields = ['id', 'api_id', 'name', 'series', 'symbol_url', 'user_cards_count']
@@ -36,12 +36,12 @@ class UserCardSerializer(serializers.ModelSerializer):
     card_name = serializers.CharField(source='card.name', read_only=True)
     expansion_name = serializers.CharField(source='card.expansion.name', read_only=True)
     expansion_id = serializers.IntegerField(source='card.expansion.id', read_only=True)
-    card_image = serializers.CharField(source='card.image_url_small', read_only=True)  # ← AGREGAR
+    card_image = serializers.CharField(source='card.image_url_small', read_only=True)  
     
     class Meta:
         model = UserCard
         fields = [
-            'id', 'card', 'card_name', 'expansion_name', 'expansion_id', 'card_image',  # ← Agregar card_image
+            'id', 'card', 'card_name', 'expansion_name', 'expansion_id', 'card_image', 
             'quantity', 'language', 'is_holographic', 'condition',
             'is_first_edition', 'is_signed', 'grade', 'notes', 'is_favorite'
         ]
