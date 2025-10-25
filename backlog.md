@@ -3,9 +3,9 @@
 ## 📊 RESUMEN DEL PROYECTO
 
 **Total de Sprints:** 13 (actualizado desde 10)
-**Historias Completadas:** 34  
+**Historias Completadas:** 35  
 **Historias en Progreso:** 1  
-**Historias Pendientes:** 85 (actualizado desde 57)
+**Historias Pendientes:** 83 (actualizado desde 85)
 
 ---
 
