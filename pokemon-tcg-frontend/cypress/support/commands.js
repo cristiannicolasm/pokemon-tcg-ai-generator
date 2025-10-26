@@ -26,9 +26,9 @@
 
 Cypress.Commands.add('login', (username, password) => {
   cy.visit('/login');
-  cy.get('input[name="username"]').type(username);
-  cy.get('input[name="password"]').type(password);
-  cy.get('button[type="submit"]').click();
+  cy.get('[data-testid="login-username"]').should('be.visible').type(username);
+  cy.get('[data-testid="login-password"]').should('be.visible').type(password);
+  cy.get('[data-testid="login-submit"]').click();
 });
 
 Cypress.Commands.add('register', (username, password) => {

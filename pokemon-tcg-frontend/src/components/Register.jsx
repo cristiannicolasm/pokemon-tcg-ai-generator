@@ -48,6 +48,7 @@ const Register = ({ onRegisterSuccess }) => {
           <input
             type="text"
             id="username"
+            name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
@@ -61,6 +62,7 @@ const Register = ({ onRegisterSuccess }) => {
           <input
             type="email"
             id="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
@@ -74,6 +76,7 @@ const Register = ({ onRegisterSuccess }) => {
           <input
             type="password"
             id="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
