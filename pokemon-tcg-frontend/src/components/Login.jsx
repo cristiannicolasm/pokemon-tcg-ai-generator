@@ -63,9 +63,11 @@ const Login = ({ onLoginSuccess }) => {
           <input
             type="text"
             id="username"
+            name="username" // <-- Agregado para pruebas E2E cypress
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoFocus
+            data-testid="login-username" // <-- Agregado para pruebas E2E cypress
           />
         </div>
         <div>
@@ -73,11 +75,18 @@ const Login = ({ onLoginSuccess }) => {
           <input
             type="password"
             id="password"
+            name="password" // <-- Agregado para pruebas E2E cypress
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            data-testid="login-password" // <-- Agregado para pruebas E2E cypress
           />
         </div>
-        <button type="submit" className="login-btn" disabled={isLoading}>
+        <button
+          type="submit"
+          className="login-btn"
+          disabled={isLoading}
+          data-testid="login-submit" // <-- Agregado para pruebas E2E cypress
+        >
           {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
         </button>
       </form>

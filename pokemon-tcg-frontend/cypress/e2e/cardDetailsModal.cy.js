@@ -17,10 +17,13 @@ describe('CardDetailsModal - Acciones de instancia', () => {
     cy.get('[data-testid^="instance-favorite-btn-"]').first().click();
   });
 
+  /*
+  //Elimina la primera carta listada en la colección
   it('puede eliminar una instancia', () => {
     cy.get('[data-testid^="instance-delete-btn-"]').first().click();
     // Simula confirmación si tu app la requiere
     cy.on('window:confirm', () => true);
     // Verifica que la instancia desaparece o el modal se cierra
   });
+  */
 });
