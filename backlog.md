@@ -71,8 +71,8 @@
 
 - [x] **Pruebas funcionales de autenticación y registro** - DONE
 - [x] **Setup de Cypress y Configuración Base** - DONE
-- [ ] **Tests E2E - Flujo de Añadir Carta a la Colección** - DOING
-- [ ] **Tests E2E - Flujo de Eliminar Carta de la Colección** - TODO
+- [x] **Tests E2E - Flujo de Añadir Carta a la Colección** - DONE
+- [ ] **Tests E2E - Flujo de Eliminar Carta de la Colección** - DOING
 - [ ] **Integración de Tests E2E con Docker** - TODO
 - [ ] **Reportes y Análisis de Resultados de Tests E2E** - TODO
 - [ ] **Documentación Completa de Testing E2E** - TODO
@@ -374,8 +374,6 @@ Implementar auditoría de seguridad completa, dashboards ejecutivos con Power BI
 ## 🎯 PRÓXIMOS PASOS
 
 1. 🔄 **Completar Sprint 4** (Testing E2E) ← EN PROGRESO
-   - Historia actual: Setup de Cypress (60% completo)
-   - Próximo: Tests de Añadir/Eliminar Carta
 2. 📅 **Sprint 5** (CI/CD + AWS Deployment)
 3. 📅 **Sprint 6** (Reportes + Analytics base)
 4. 📅 **Sprint 7** (Decks ganadores + Búsqueda avanzada)
