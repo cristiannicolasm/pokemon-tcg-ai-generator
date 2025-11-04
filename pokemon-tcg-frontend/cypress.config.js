@@ -94,8 +94,16 @@ export default defineConfig({
 
     /**
      * Comprimir videos para ahorrar espacio
+     * - 32 = buena calidad con menor tamaño
      */
     videoCompression: 32,
+
+    /**
+     * Grabar videos solo cuando tests fallan (ahorra espacio)
+     * - true: Solo videos de tests fallidos
+     * - false: Videos de todos los tests
+     */
+    videoUploadOnPasses: false,
 
     /**
      * Tomar screenshot automáticamente cuando un test falla
@@ -106,6 +114,24 @@ export default defineConfig({
      * Carpeta de screenshots
      */
     screenshotsFolder: 'cypress/screenshots',
+
+    /**
+     * Configuración de captura de pantalla
+     */
+    screenshotConfig: {
+      capture: 'fullPage',  // Capturar página completa
+      scale: false,         // No escalar (mejor calidad)
+      disableTimersAndAnimations: true,  // Evitar animaciones en screenshots
+      blackout: ['.sensitive-data'],     // Ocultar elementos sensibles
+      clip: null,           // Capturar toda la pantalla
+      padding: null         // Sin padding adicional
+    },
+
+    /**
+     * Tiempo de retención de videos (en días)
+     * - Los videos antiguos se pueden limpiar automáticamente
+     */
+    trashAssetsBeforeRuns: true,  // Limpiar assets anteriores antes de ejecutar
 
     // -------------------------------------
     // RETRY LOGIC (Reintentos)
@@ -174,6 +200,38 @@ export default defineConfig({
     experimentalMemoryManagement: true, // Mejor manejo de memoria
 
     // -------------------------------------
+    // REPORTES (Mochawesome)
+    // -------------------------------------
+    /**
+     * Reporter para generar reportes HTML profesionales
+     */
+    reporter: 'mochawesome',
+    reporterOptions: {
+      // Ubicación de reportes
+      reportDir: 'cypress/reports/mochawesome',
+      
+      // Generar archivos JSON individuales (se combinan después)
+      overwrite: false,
+      html: false,
+      json: true,
+      
+      // Incluir assets (screenshots, videos) en el reporte
+      inlineAssets: true,
+      
+      // Configuración adicional
+      reportTitle: 'Pokemon TCG - E2E Test Report',
+      reportPageTitle: 'Cypress E2E Tests',
+      embeddedScreenshots: true,
+      showPassed: true,
+      showFailed: true,
+      showPending: true,
+      showSkipped: false,
+      code: true,
+      autoOpen: false,
+      timestamp: 'isoDateTime'
+    },
+
+    // -------------------------------------
     // NODE EVENTS (Plugins)
     // -------------------------------------
     setupNodeEvents(on, config) {
@@ -184,19 +242,40 @@ export default defineConfig({
        * - Integrar con otras herramientas
        */
 
-      // Ejemplo: Log cuando un test falla
+      // Task personalizada para logging
       on('task', {
         log(message) {
           console.log('🔴 TEST FAILURE:', message);
           return null;
         },
         
-        // Task para limpiar base de datos antes de tests (OPCIONAL)
+        // Task para limpiar base de datos antes de tests
         resetDB() {
-          // Aquí llamaría a un endpoint del backend
-          // que resetea la DB a estado conocido
           console.log('🔄 Resetting database...');
           return null;
+        },
+
+        // Task para análisis de performance
+        logPerformance(data) {
+          console.log('📊 PERFORMANCE DATA:', JSON.stringify(data, null, 2));
+          return null;
+        }
+      });
+
+      // Configurar before:run para limpiar reportes anteriores
+      on('before:run', async (details) => {
+        console.log('🚀 Starting E2E Test Suite...');
+        console.log(`📱 Browser: ${details.browser.name} ${details.browser.version}`);
+        console.log(`📊 Specs to run: ${details.specs.length}`);
+      });
+
+      // Configurar after:run para generar reporte consolidado
+      on('after:run', async (results) => {
+        console.log('✅ E2E Tests completed!');
+        console.log(`� Results: ${results.totalPassed}/${results.totalTests} passed`);
+        
+        if (results.totalFailed > 0) {
+          console.log(`❌ Failed tests: ${results.totalFailed}`);
         }
       });
 
