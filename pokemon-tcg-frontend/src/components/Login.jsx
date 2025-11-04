@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../axiosInstance';
 import './Login.css';
 
 const Login = ({ onLoginSuccess }) => {
@@ -17,31 +18,22 @@ const Login = ({ onLoginSuccess }) => {
 
     setIsLoading(true); // AÑADIR
     try {
-      const response = await fetch('http://localhost:8000/api/token/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await axiosInstance.post('/token/', {
+        username, 
+        password
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access);
-        localStorage.setItem('refresh_token', data.refresh);
-        setMessage('¡Inicio de sesión exitoso!');
-        setUsername('');
-        setPassword('');
-        if (onLoginSuccess) {
-          onLoginSuccess(data.access);
-        }
-      } else {
-        const data = await response.json();
-        setMessage(`Error: ${data.detail || 'Credenciales incorrectas. Inténtalo de nuevo.'}`);
+      localStorage.setItem('access_token', response.data.access);
+      localStorage.setItem('refresh_token', response.data.refresh);
+      setMessage('¡Inicio de sesión exitoso!');
+      setUsername('');
+      setPassword('');
+      if (onLoginSuccess) {
+        onLoginSuccess(response.data.access);
       }
     } catch (error) {
-      console.error('Error de red:', error);
-      setMessage('Error de red al intentar conectar con el servidor. Verifica que el backend esté activo.');
+      console.error('Error de login:', error);
+      setMessage(error.response?.data?.detail || 'Error al iniciar sesión. Verifica tus credenciales.');
     } finally {
       setIsLoading(false); // AÑADIR
     }

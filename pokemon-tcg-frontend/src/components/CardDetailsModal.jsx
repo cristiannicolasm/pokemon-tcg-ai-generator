@@ -12,7 +12,7 @@ const CardDetailsModal = ({ cardGroup, onClose, onUpdate }) => {
 
     try {
       setLoading(true);
-      await axiosInstance.delete(`/api/user-cards/${instanceId}/`);
+      await axiosInstance.delete(`/user-cards/${instanceId}/`);
       onUpdate(); // Refrescar datos
       
       // Si era la última instancia, cerrar modal
@@ -30,7 +30,7 @@ const CardDetailsModal = ({ cardGroup, onClose, onUpdate }) => {
   const handleToggleFavorite = async (instanceId, currentFavoriteStatus) => {
     try {
       setLoading(true);
-      await axiosInstance.patch(`/api/user-cards/${instanceId}/`, {
+      await axiosInstance.patch(`/user-cards/${instanceId}/`, {
         is_favorite: !currentFavoriteStatus
       });
       onUpdate(); // Refrescar datos

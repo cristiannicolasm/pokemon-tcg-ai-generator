@@ -21,7 +21,7 @@ function AddUserCardForm({ token, onSuccess }) {
 
   useEffect(() => {
   // Lista las expansiones
-  axios.get("http://localhost:8000/api/expansions/", {
+  axios.get("/expansions/", {
     headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => setExpansions(res.data))
@@ -32,7 +32,7 @@ function AddUserCardForm({ token, onSuccess }) {
 
 useEffect(() => {
   if (selectedExpansion) {
-    axios.get(`http://localhost:8000/api/expansions/${selectedExpansion}/cards/`, {
+    axios.get(`/expansions/${selectedExpansion}/cards/`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setCards(res.data))
@@ -54,15 +54,19 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+  console.log('🔍 Submit triggered, selectedCard:', selectedCard);
   setMessage(""); // Limpia mensajes anteriores
 
-  if (!selectedCard) {
+  if (!selectedCard || selectedCard === "" || selectedCard === null) {
+    console.log('❌ Validation failed: no card selected');
     setMessage("Debes seleccionar una carta.");
     return;
   }
 
+  console.log('✅ Validation passed, proceeding to add card');
+
   try {
-    await axios.post("http://localhost:8000/api/user-cards/add/", {
+    await axios.post("/user-cards/add/", {
       card: selectedCard,
       ...form
     }, {
@@ -118,7 +122,6 @@ useEffect(() => {
             const value = e.target.value;
             setSelectedCard(value ? Number(value) : null);
           }}
-          required
           data-testid="addcard-card-select"
         >
           <option value="">Selecciona una carta</option>

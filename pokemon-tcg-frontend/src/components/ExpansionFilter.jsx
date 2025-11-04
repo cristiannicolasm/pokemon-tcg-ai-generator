@@ -14,7 +14,7 @@ const ExpansionFilter = ({ onExpansionChange, selectedExpansion }) => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axiosInstance.get('/api/user-expansions/');
+        const response = await axiosInstance.get('/user-expansions/');
 
         if (isMounted) {
           setExpansions(response.data);

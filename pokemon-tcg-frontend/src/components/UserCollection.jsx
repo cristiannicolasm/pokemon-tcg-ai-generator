@@ -17,12 +17,23 @@ const UserCollection = () => {
   const fetchGroupedCards = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/api/user-cards/grouped/');
+      console.log('🔍 Iniciando carga de cartas agrupadas...');
+      console.log('🔑 Token en localStorage:', localStorage.getItem('access_token'));
+      
+      const response = await axiosInstance.get('/user-cards/grouped/');
+      console.log('✅ Respuesta del servidor:', response.data);
+      console.log('📊 Número de grupos de cartas:', response.data.length);
+      
       setGroupedCards(response.data);
       setFilteredCards(response.data);
     } catch (err) {
-      console.error('Error fetching grouped cards:', err);
-      setError('Error al cargar tu colección');
+      console.error('❌ Error fetching grouped cards:', err);
+      console.error('📋 Detalles del error:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data
+      });
+      setError('Error al cargar tu colección: ' + (err.response?.status || err.message));
     } finally {
       setLoading(false);
     }
@@ -74,7 +85,7 @@ const UserCollection = () => {
       
       // Actualizar la primera instancia
       const firstInstanceId = cardGroup.instances[0].id;
-      await axiosInstance.patch(`/api/user-cards/${firstInstanceId}/`, {
+      await axiosInstance.patch(`/user-cards/${firstInstanceId}/`, {
         is_favorite: newFavoriteStatus
       });
       

@@ -5,51 +5,48 @@ describe('Flujo E2E - Añadir Carta a la Colección', () => {
       cy.login(user.username, user.password);
     });
 
-    // Mock de la API para añadir carta
-    cy.intercept('POST', '/api/user-cards/add/', {
-      statusCode: 201,
-      body: {
-        id: 123,
-        card_name: 'Bill',
-        expansion: 'Base Set 2',
-        quantity: 1
-      }
-    }).as('addCard');
-
-    // Mock para obtener la colección actualizada
-    cy.intercept('GET', '/api/user-cards/', {
-      statusCode: 200,
-      body: [
-        {
-          id: 123,
-          card_name: 'Bill',
-          expansion: 'Base Set 2',
-          quantity: 1
-        }
-      ]
-    }).as('getCards');
+    // Interceptar llamadas a API reales (sin el /api/ duplicado)
+    cy.intercept('POST', '**/user-cards/add/').as('addCard');
+    cy.intercept('GET', '**/user-cards/grouped/').as('getGroupedCards');
   });
 
   it('añade una carta y la muestra en la colección', () => {
+    // Ya estamos en la página principal después del login
+    // Los elementos deberían estar visibles
+    cy.get('[data-testid="addcard-expansion-select"]').should('be.visible');
+    
     // Abre el formulario para añadir carta
-    cy.get('[data-testid="addcard-expansion-select"]').select('Base Set 2'); // Selecciona una expansión
-    cy.get('[data-testid="addcard-card-select"]').select('Bill'); // Selecciona una carta
+    cy.get('[data-testid="addcard-expansion-select"]').select('Base'); // Usar expansión real
+    cy.get('[data-testid="addcard-card-select"]').select('Charizard'); // Usar carta real
     cy.get('[data-testid="addcard-quantity"]').clear().type('1');
     cy.get('[data-testid="addcard-submit"]').click();
 
-    // Espera a que el mock de añadir carta se ejecute
+    // Espera a que la carta se añada
     cy.wait('@addCard');
-    // Verifica que la carta aparece en la colección (mockeada)
-    cy.get('[data-testid="usercard-item"]').should('contain', 'Bill');
+    
+    // Esperar un poco para que se recargue la colección
+    cy.wait(1000);
+    
+    // Verifica que la carta aparece en la colección (en la misma página)
+    cy.get('[data-testid="usercard-item"]').should('contain', 'Charizard');
   });
 
   it('muestra error si se intenta añadir sin seleccionar carta', () => {
+    // Los elementos están en la misma página
+    cy.get('[data-testid="addcard-expansion-select"]').should('be.visible');
+    
     // Selecciona expansión pero no carta
-    cy.get('[data-testid="addcard-expansion-select"]').select('Base Set 2');
-    cy.get('[data-testid="addcard-card-select"]').select(''); // No selecciona carta
+    cy.get('[data-testid="addcard-expansion-select"]').select('Base');
+    
+    // Esperar a que aparezcan las opciones de cartas
+    cy.get('[data-testid="addcard-card-select"]').should('be.visible');
+    cy.wait(2000); // Tiempo para que se carguen las cartas
+    
+    // No seleccionar carta (dejar en "Selecciona una carta"), solo cantidad
     cy.get('[data-testid="addcard-quantity"]').clear().type('1');
     cy.get('[data-testid="addcard-submit"]').click();
 
-    cy.contains('Selecciona una carta').should('be.visible');
+    // Verificar que aparece el mensaje de error
+    cy.get('.form-message', { timeout: 5000 }).should('contain', 'Debes seleccionar una carta');
   });
 });

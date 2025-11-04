@@ -1,5 +1,6 @@
 // src/components/ExpansionSelector.jsx
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../axiosInstance';
 
 const ExpansionSelector = ({ onSelectExpansion }) => {
   const [expansions, setExpansions] = useState([]);
@@ -9,34 +10,11 @@ const ExpansionSelector = ({ onSelectExpansion }) => {
   useEffect(() => {
     const fetchExpansions = async () => {
       try {
-        // Obtiene el token de acceso del localStorage
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-          throw new Error("No hay token de autenticación. Inicia sesión para ver las expansiones.");
-        }
-
-        const response = await fetch('http://localhost:8000/api/expansions/', {
-          method: 'GET',
-          headers: {
-            // Añade el encabezado de autorización con el token JWT
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        // Manejam el error 401 si el token no es válido o ha expirado
-        if (response.status === 401) {
-          throw new Error("Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.");
-        }
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setExpansions(data);
+        const response = await axiosInstance.get('/expansions/');
+        setExpansions(response.data);
       } catch (e) {
         console.error('Error al obtener expansiones:', e);
-        setError(e.message);
+        setError(e.message || 'Error al cargar las expansiones');
       } finally {
         setLoading(false);
       }

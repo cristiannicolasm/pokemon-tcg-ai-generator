@@ -1,5 +1,6 @@
 // src/components/CardList.jsx
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../axiosInstance';
 
 const CardList = ({ expansionId }) => {
   const [cards, setCards] = useState([]);
@@ -13,37 +14,11 @@ const CardList = ({ expansionId }) => {
       setLoading(true);
       setError(null);
       try {
-        // Obtenemos el token de acceso del localStorage
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-          throw new Error("No hay token de autenticación. Inicia sesión para ver las cartas.");
-        }
-        
-        const response = await fetch(`http://localhost:8000/api/expansions/${expansionId}/cards/`, {
-          method: 'GET',
-          headers: {
-            // Añade el encabezado de autorización con el token JWT
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        // Maneja el error 401 si el token no es válido o ha expirado
-        if (response.status === 401) {
-          // Si el token no es válido, borra los tokens para forzar al usuario a iniciar sesión de nuevo.
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          throw new Error("Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.");
-        }
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setCards(data);
+        const response = await axiosInstance.get(`/expansions/${expansionId}/cards/`);
+        setCards(response.data);
       } catch (e) {
         console.error('Error al obtener cartas:', e);
-        setError(e.message);
+        setError(e.message || 'Error al cargar las cartas');
       } finally {
         setLoading(false);
       }

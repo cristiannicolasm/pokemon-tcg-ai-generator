@@ -66,6 +66,7 @@ REST_FRAMEWORK = {
 #En producción, esto debería ser False y especificar CORS_ALLOWED_ORIGINS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", #Ejemplo para tu frontend React
+    "http://localhost:4173", #Puerto usado por el frontend en Docker
 ]
 CORS_ALLOW_HEADERS = [
     "accept",

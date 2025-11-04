@@ -4,7 +4,11 @@ describe('CardDetailsModal - Acciones de instancia', () => {
     cy.fixture('example.json').then((user) => {
       cy.login(user.username, user.password);
     });
-    // Espera a que la colección cargue y abre el modal de detalles
+    
+    // Esperar a que la colección cargue en la página principal
+    cy.get('[data-testid="usercard-item"]').should('exist');
+    
+    // Abre el modal de detalles de la primera carta
     cy.get('[data-testid="usercard-details-btn"]').first().click();
   });
 
