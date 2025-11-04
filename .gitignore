@@ -148,10 +148,6 @@ setup_test_data.py
 !babel.config.cjs
 !pytest.ini
 
-# Permitir documentación en docs/
-!docs/
-!docs/**/*.md
-
 # ========================================
 # ARCHIVOS QUE NO DEBEN COMMITEARSE NUNCA
 # ========================================
@@ -167,3 +163,12 @@ credentials/
 user_data/
 sensitive_data/
 backups/
+
+# ========================================
+# ARCHIVOS INTERNOS DE DESARROLLO
+# ========================================
+# Contexto del proyecto (uso local únicamente)
+contexto.md
+
+# Documentación interna (no para repo público)
+docs/
