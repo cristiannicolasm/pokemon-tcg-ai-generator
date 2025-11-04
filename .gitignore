@@ -1,33 +1,47 @@
 # .gitignore
 
+# ========================================
+# PYTHON / DJANGO BACKEND
+# ========================================
+
 # Entorno virtual
 venv/
+env/
+ENV/
 *.pyc
 __pycache__/
+*.pyo
+*.pyd
+.Python
 
-# Archivos de base de datos (se usarpa SQLite, pero no para Postgres en Docker)
+# Archivos de base de datos
 db.sqlite3
+*.db
+*.sqlite
+*.sqlite3
 
 # Archivos de medios subidos por el usuario
 media/
-
-# Archivos de configuración con secretos (¡IMPORTANTE!)
-*.env
-.env
-
-# Sistema operativo y editor
-.DS_Store # macOS
-Thumbs.db # Windows
-.idea/    # PyCharm
-.vscode/  # VS Code
+static_cdn/
+media_cdn/
 
 # Django específicos
-# Archivos generados que no deben versionarse
-# 
-/static_cdn/
-/media_cdn/
 local_settings.py
 *.log
+.cache/
+
+# Pytest cache
+.pytest_cache/
+
+# ========================================
+# ENVIRONMENT VARIABLES & SECRETS
+# ========================================
+*.env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # ========================================
 # FRONTEND - Node.js / React
@@ -35,10 +49,14 @@ local_settings.py
 pokemon-tcg-frontend/node_modules/
 pokemon-tcg-frontend/dist/
 pokemon-tcg-frontend/build/
-pokemon-tcg-frontend/.env.local
-pokemon-tcg-frontend/.env.development.local
-pokemon-tcg-frontend/.env.test.local
-pokemon-tcg-frontend/.env.production.local
+
+# Coverage reports (generados dinámicamente)
+pokemon-tcg-frontend/coverage/
+pokemon-tcg-frontend/coverage-backend/
+
+# Reportes de tests (generados dinámicamente)
+pokemon-tcg-frontend/reports/
+pokemon-tcg-frontend/mochawesome-report/
 
 # ========================================
 # CYPRESS - Testing E2E
@@ -47,20 +65,105 @@ pokemon-tcg-frontend/.env.production.local
 pokemon-tcg-frontend/cypress/videos/
 pokemon-tcg-frontend/cypress/screenshots/
 pokemon-tcg-frontend/cypress/downloads/
+pokemon-tcg-frontend/cypress/reports/
 
-# Credenciales de test (no commitear)
+# Credenciales de test (contiene info sensible)
 pokemon-tcg-frontend/cypress.env.json
 
 # Cache de Cypress
 pokemon-tcg-frontend/.cache/
 
-# Reportes de Cypress
-pokemon-tcg-frontend/cypress/reports/
-pokemon-tcg-frontend/mochawesome-report/
+# ========================================
+# SISTEMA OPERATIVO Y EDITORES
+# ========================================
+.DS_Store      # macOS
+Thumbs.db      # Windows
+.idea/         # PyCharm
+.vscode/       # VS Code
+*.swp          # Vim
+*.swo          # Vim
+*~             # Backup files
 
-# Documentos md
-*.md
+# ========================================
+# CI/CD Y DEPLOYMENT
+# ========================================
+# Docker
+.docker/
+docker-compose.override.yml
 
-#Excepto backlog.md y readme.md
+# AWS
+.aws/
+*.pem
+
+# Terraform (cuando lo agreguemos)
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# ========================================
+# DOCUMENTACIÓN Y LOGS
+# ========================================
+# Archivos temporales de documentación
+*.tmp
+*.temp
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================================
+# ARCHIVOS DE DESARROLLO LOCAL
+# ========================================
+# Scripts de desarrollo local
+*local*
+*debug*
+*test_data*
+create_test_data.py
+setup_test_data.py
+
+# Archivos de backup
+*.bak
+*.backup
+
+# ========================================
+# EXCEPCIONES IMPORTANTES
+# ========================================
+# Permitir estos archivos específicos
 !backlog.md
-!readme.md
+!historia_actual.md
+!README.md
+!requirements.txt
+!package.json
+!package-lock.json
+!docker-compose.yml
+!Dockerfile
+!cypress.config.js
+!jest.config.cjs
+!vite.config.js
+!eslint.config.js
+!babel.config.cjs
+!pytest.ini
+
+# Permitir documentación en docs/
+!docs/
+!docs/**/*.md
+
+# ========================================
+# ARCHIVOS QUE NO DEBEN COMMITEARSE NUNCA
+# ========================================
+# Credenciales y claves
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# Datos sensibles
+user_data/
+sensitive_data/
+backups/

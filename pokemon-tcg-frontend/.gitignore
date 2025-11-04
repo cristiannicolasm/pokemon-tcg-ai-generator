@@ -1,24 +1,93 @@
-# Logs
-logs
-*.log
+# ========================================
+# NODE.JS / NPM
+# ========================================
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# ========================================
+# BUILD OUTPUTS
+# ========================================
+dist/
+dist-ssr/
+build/
+
+# ========================================
+# ENVIRONMENT VARIABLES
+# ========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 *.local
 
+# ========================================
+# TESTING & COVERAGE
+# ========================================
+# Coverage reports (regenerated each test run)
+coverage/
+.nyc_output/
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# ========================================
+# CYPRESS E2E TESTING
+# ========================================
+# Test artifacts (regenerated each run)
+cypress/videos/
+cypress/screenshots/
+cypress/reports/
+cypress/downloads/
+
+# Cypress environment (may contain sensitive data)
+cypress.env.json
+
+# ========================================
+# DEVELOPMENT TOOLS
+# ========================================
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+!.vscode/settings.json
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ========================================
+# CACHE & TEMP FILES
+# ========================================
+.cache/
+.temp/
+.tmp/
+
+# ========================================
+# LOGS
+# ========================================
+logs/
+*.log
+
+# ========================================
+# REPORTS & ARTIFACTS
+# ========================================
+# Unified reports (regenerated)
+reports/
+mochawesome-report/
+
+# Storybook build outputs
+storybook-static/
+
+# ========================================
+# OS GENERATED FILES
+# ========================================
+Thumbs.db
+.DS_Store
