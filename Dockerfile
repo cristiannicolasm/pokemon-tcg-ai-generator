@@ -1,7 +1,7 @@
 # Dockerfile
 
 # Usar una imagen base de Python oficial. Recomiendo una versión específica y ligera.
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-bullseye
 
 # Establecer la variable de entorno para evitar que Python escriba archivos .pyc en el contenedor
 ENV PYTHONDONTWRITEBYTECODE 1

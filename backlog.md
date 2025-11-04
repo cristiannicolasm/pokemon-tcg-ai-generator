@@ -3,9 +3,9 @@
 ## 📊 RESUMEN DEL PROYECTO
 
 **Total de Sprints:** 13 (actualizado desde 10)
-**Historias Completadas:** 35  
-**Historias en Progreso:** 1  
-**Historias Pendientes:** 83 (actualizado desde 85)
+**Historias Completadas:** 37  
+**Historias en Progreso:** 0  
+**Historias Pendientes:** 81 (actualizado desde 83)
 
 ---
 
@@ -72,8 +72,8 @@
 - [x] **Pruebas funcionales de autenticación y registro** - DONE
 - [x] **Setup de Cypress y Configuración Base** - DONE
 - [x] **Tests E2E - Flujo de Añadir Carta a la Colección** - DONE
-- [ ] **Tests E2E - Flujo de Eliminar Carta de la Colección** - DOING
-- [ ] **Integración de Tests E2E con Docker** - TODO
+- [x] **Tests E2E - Flujo de Eliminar Carta de la Colección** - DONE
+- [x] **Integración de Tests E2E con Docker** - DONE
 - [ ] **Reportes y Análisis de Resultados de Tests E2E** - TODO
 - [ ] **Documentación Completa de Testing E2E** - TODO
 - [ ] **Cierre de Sprint 4 y Actualización de Backlog** - TODO
@@ -352,7 +352,7 @@ Implementar auditoría de seguridad completa, dashboards ejecutivos con Power BI
 | 1      | 9         | -      | 9          | 0         | 100%         | Setup + APIs |
 | 2      | 15        | -      | 15         | 0         | 100%         | Auth + Frontend |
 | 3      | 10        | -      | 10         | 0         | 100%         | Colección + Tests |
-| 4      | 8         | 21     | 1          | 7         | 13%          | Testing E2E |
+| 4      | 8         | 21     | 5          | 3         | 63%          | Testing E2E |
 | 5      | 8         | 15     | 0          | 8         | 0%           | CI/CD + AWS |
 | 6      | 7         | 12     | 0          | 7         | 0%           | Reportes + Analytics |
 | 7      | 7         | 18     | 0          | 7         | 0%           | Decks + Búsqueda |

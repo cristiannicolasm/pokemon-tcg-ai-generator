@@ -13,19 +13,19 @@ export default defineConfig({
      * - En desarrollo: http://localhost:5173
      * - En CI/CD: Se sobrescribe con variable de entorno
      */
-    baseUrl: 'http://localhost:5173',
-
+    //baseUrl: 'http://localhost:5173',
+    baseUrl: 'http://localhost:4173',
     /**
      * Variables de entorno accesibles en tests
      * Uso: Cypress.env('apiUrl')
      */
     env: {
       // URL del Backend (Docker)
-      apiUrl: 'http://localhost:8000',
+      apiUrl: 'http://web:8000',
       
       // Endpoints específicos (para no hardcodear en tests)
       endpoints: {
-        login: '/api/auth/login/',
+        login: 'http://localhost:4173/login/',
         register: '/api/auth/register/',
         expansions: '/api/expansions/',
         cards: '/api/cards/',

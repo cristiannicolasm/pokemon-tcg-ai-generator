@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../axiosInstance';
 
 const Register = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState('');
@@ -12,22 +13,15 @@ const Register = ({ onRegisterSuccess }) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/register/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
+      const response = await axiosInstance.post('/register/', {
+        username, 
+        email, 
+        password
       });
 
-      if (response.ok) {
-        setMessage('¡Registro exitoso! Ya puedes iniciar sesión.');
-        if (onRegisterSuccess) {
-          onRegisterSuccess();
-        }
-      } else {
-        const data = await response.json();
-        setMessage(`Error: ${JSON.stringify(data)}`);
+      setMessage('¡Registro exitoso! Ya puedes iniciar sesión.');
+      if (onRegisterSuccess) {
+        onRegisterSuccess();
       }
     } catch (error) {
       console.error('Error de red:', error);

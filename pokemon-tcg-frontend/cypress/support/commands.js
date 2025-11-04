@@ -25,14 +25,20 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', (username, password) => {
-  cy.visit('/login');
+  cy.visit('/');
+  // Esperar a que aparezca el formulario de login
   cy.get('[data-testid="login-username"]').should('be.visible').type(username);
   cy.get('[data-testid="login-password"]').should('be.visible').type(password);
   cy.get('[data-testid="login-submit"]').click();
+  
+  // Esperar a que aparezca el contenido autenticado
+  cy.contains('¡Bienvenido! Has iniciado sesión exitosamente.').should('be.visible');
 });
 
 Cypress.Commands.add('register', (username, password) => {
-  cy.visit('/register');
+  cy.visit('/');
+  // Cambiar a modo registro si no estamos en él
+  cy.contains('Regístrate aquí').click();
   cy.get('input[name="username"]').type(username);
   cy.get('input[name="password"]').type(password);
   cy.get('button[type="submit"]').click();
