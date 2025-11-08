@@ -39,7 +39,7 @@ jobs:
         
     - name: Run Django tests
       run: |
-        python manage.py test
+        pytest --verbosity=2
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/pokemon_test
         DJANGO_SETTINGS_MODULE: pokemon_tcg_ai.settings
