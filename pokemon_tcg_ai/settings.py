@@ -18,7 +18,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 # ...
 # API_KEY = os.getenv('POKEMON_TCG_API_KEY') # Así la cargarías si la necesitaras
 # ...
-
+import os
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 
@@ -122,16 +123,26 @@ WSGI_APPLICATION = 'pokemon_tcg_ai.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Cambiar a PostgreSQL
-        'NAME': 'mydatabase',    # Nombre de la DB (igual que POSTGRES_DB en docker-compose.yml)
-        'USER': 'user',          # Usuario de la DB (igual que POSTGRES_USER)
-        'PASSWORD': 'password',  # Contraseña de la DB (igual que POSTGRES_PASSWORD)
-        'HOST': 'db',            # El nombre del servicio de la DB en docker-compose
-        'PORT': '5432',          # Puerto por defecto de PostgreSQL
+# Configuración flexible de base de datos
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Para CI (GitHub Actions) y Railway
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    # Para desarrollo local con Docker
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mydatabase',
+            'USER': 'user',
+            'PASSWORD': 'password',
+            'HOST': 'db',
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation

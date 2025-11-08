@@ -133,8 +133,6 @@ setup_test_data.py
 # EXCEPCIONES IMPORTANTES
 # ========================================
 # Permitir estos archivos específicos
-!backlog.md
-!historia_actual.md
 !README.md
 !requirements.txt
 !package.json
@@ -169,6 +167,8 @@ backups/
 # ========================================
 # Contexto del proyecto (uso local únicamente)
 contexto.md
+backlog.md
+historia_actual.md
 
 # Documentación interna (no para repo público)
 docs/
