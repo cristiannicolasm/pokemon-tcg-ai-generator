@@ -166,9 +166,5 @@ backups/
 # ARCHIVOS INTERNOS DE DESARROLLO
 # ========================================
 # Contexto del proyecto (uso local únicamente)
-contexto.md
-backlog.md
-historia_actual.md
-
 # Documentación interna (no para repo público)
-docs/
+*.md

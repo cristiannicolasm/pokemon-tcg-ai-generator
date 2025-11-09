@@ -43,3 +43,16 @@ jobs:
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/pokemon_test
         DJANGO_SETTINGS_MODULE: pokemon_tcg_ai.settings
+
+  deploy:
+      needs: test
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/railway-deployment' && github.event_name == 'push'
+      
+      steps:
+      - name: Deploy to Railway
+        uses: bervProject/railway-deploy@v1.0.6
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          railway_project_id: ${{ secrets.RAILWAY_PROJECT_ID }}
+
