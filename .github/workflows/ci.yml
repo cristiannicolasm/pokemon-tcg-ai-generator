@@ -57,6 +57,15 @@ jobs:
       run: |
         npm install -g @railway/cli
       
+    - name: Debug Railway CLI
+      run: |
+        echo "Testing Railway CLI connection..."
+        railway whoami
+        echo "Listing projects..."
+        railway projects
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
     - name: Deploy to Railway
       run: railway up --service web
       env:
