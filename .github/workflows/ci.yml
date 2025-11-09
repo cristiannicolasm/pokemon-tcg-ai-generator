@@ -45,14 +45,20 @@ jobs:
         DJANGO_SETTINGS_MODULE: pokemon_tcg_ai.settings
 
   deploy:
-      needs: test
-      runs-on: ubuntu-latest
-      if: github.ref == 'refs/heads/railway-deployment' && github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/railway-deployment' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install Railway CLI
+      run: |
+        npm install -g @railway/cli
       
-      steps:
-      - name: Deploy to Railway
-        uses: bervProject/railway-deploy@v1.0.6
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          railway_project_id: ${{ secrets.RAILWAY_PROJECT_ID }}
-
+    - name: Deploy to Railway
+      run: railway up --service web
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+ 
