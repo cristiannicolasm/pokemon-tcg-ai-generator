@@ -97,6 +97,3 @@ jobs:
       run: |
         echo "💥 Deploy failed!"
         echo "Check Railway logs for details"
-
-
-        RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
