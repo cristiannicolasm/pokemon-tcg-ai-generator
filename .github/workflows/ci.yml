@@ -97,3 +97,5 @@ jobs:
       run: |
         echo "💥 Deploy failed!"
         echo "Check Railway logs for details"
+        echo "Project ID: ${{ secrets.RAILWAY_PROJECT_ID }}"
+        echo "Token: ${{ secrets.RAILWAY_TOKEN }}"
