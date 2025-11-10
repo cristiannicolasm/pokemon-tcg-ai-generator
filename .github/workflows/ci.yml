@@ -44,5 +44,59 @@ jobs:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/pokemon_test
         DJANGO_SETTINGS_MODULE: pokemon_tcg_ai.settings
 
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/railway-deployment' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install Railway CLI
+      run: npm install -g @railway/cli
+      
+    - name: Deploy to Railway
+      run: railway up
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+    
+    - name: Health Check Post-Deploy
+      run: |
+        echo "Waiting for deployment to be ready..."
+        sleep 30
+        
+        # Get Railway service URL (you'll need to set this as secret)
+        APP_URL="${{ secrets.RAILWAY_APP_URL }}"
+        
+        # Health check with retry
+        for i in {1..5}; do
+          if curl -f -s "$APP_URL/admin/" > /dev/null; then
+            echo "✅ Health check passed!"
+            break
+          else
+            echo "⏳ Health check attempt $i failed, retrying..."
+            sleep 10
+          fi
+          
+          if [ $i -eq 5 ]; then
+            echo "❌ Health check failed after 5 attempts"
+            exit 1
+          fi
+        done
+    
+    - name: Notify Deploy Success
+      if: success()
+      run: |
+        echo "🚀 Deploy successful!"
+        echo "App URL: ${{ secrets.RAILWAY_APP_URL }}"
+        
+    - name: Notify Deploy Failure  
+      if: failure()
+      run: |
+        echo "💥 Deploy failed!"
+        echo "Check Railway logs for details"
+
 
         RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
