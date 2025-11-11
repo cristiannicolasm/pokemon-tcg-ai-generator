@@ -11,10 +11,8 @@ ENV PYTHONUNBUFFERED 1
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# ...
-RUN apt-get update && apt-get install -y postgresql-client \
-    && rm -rf /var/lib/apt/lists/* 
-# ...
+# Instalar PostgreSQL client
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
 
 # Copiar el archivo requirements.txt al directorio de trabajo
 COPY requirements.txt /app/
@@ -37,3 +35,6 @@ ENTRYPOINT ["python", "manage.py"]
 
 # Exponer el puerto en el que Django correrá (por defecto 8000)
 EXPOSE 8000
+
+# Comando para iniciar la aplicación
+CMD ["gunicorn", "pokemon_tcg_ai.wsgi:application", "--bind", "0.0.0.0:8000"]
