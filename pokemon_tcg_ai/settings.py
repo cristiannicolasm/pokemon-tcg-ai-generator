@@ -124,9 +124,19 @@ WSGI_APPLICATION = 'pokemon_tcg_ai.wsgi.application'
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-    # Para CI (GitHub Actions) y Railway
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mydatabase',
+            'USER': 'user',
+            'PASSWORD': 'password',
+            'HOST': 'db',
+            'PORT': '5432',
+        }
     }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -214,6 +224,6 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'ERROR',
+        'level': 'DEBUG',
     },
 }
