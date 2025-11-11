@@ -10,6 +10,8 @@ from .models import Expansion, Card, UserCard
 from rest_framework.response import Response
 from .serializers import ExpansionSerializer, CardSerializer, UserCardSerializer, UserSerializer, ExpansionWithCountSerializer
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 class ExpansionListView(generics.ListAPIView):
@@ -60,6 +62,7 @@ class CardDetailView(generics.RetrieveAPIView):
     
 User = get_user_model()
 
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
