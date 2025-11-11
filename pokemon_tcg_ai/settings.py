@@ -33,8 +33,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-rwm5gc=h#zz^_ofdu*5x#ray1k$li^4tf(8)2(#(byebrx)zk!'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+# Seguridad: nunca activar DEBUG en producción
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Solo warnings y errores en producción
+        },
+    }
 
 ALLOWED_HOSTS = ["*", ".railway.app"]
 
