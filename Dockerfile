@@ -31,7 +31,7 @@ COPY . /app/
 
 # Establecer el punto de entrada para la aplicación Django
 # Esto es lo que se ejecuta cuando el contenedor se inicia
-ENTRYPOINT ["python", "manage.py"]
+# ENTRYPOINT ["python", "manage.py"]
 
 # Exponer el puerto en el que Django correrá (por defecto 8000)
 EXPOSE 8000
