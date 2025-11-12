@@ -84,11 +84,11 @@ class UserExpansionsView(generics.ListAPIView):
 
     def get_queryset(self):
         # Query corregida con el related_name correcto
-        expansion_ids = UserCard.objects.filter(
+        expansion_ids = UserCard.objects.filter( # pylint: disable=no-member
             user=self.request.user
         ).values_list('card__expansion_id', flat=True).distinct()
         
-        user_expansions = Expansion.objects.filter(
+        user_expansions = Expansion.objects.filter( # pylint: disable=no-member
             id__in=expansion_ids
         ).annotate(
             user_cards_count=Count(
@@ -111,7 +111,7 @@ class UserCardsGroupedView(generics.GenericAPIView):
         Agrupa cartas del usuario por carta y expansión, devolviendo información resumida
         y todas las instancias de cada grupo
         """
-        user_cards = UserCard.objects.filter(
+        user_cards = UserCard.objects.filter( # pylint: disable=no-member
             user=request.user
         ).select_related('card', 'card__expansion').order_by('card__name', 'card__expansion__name')
         
