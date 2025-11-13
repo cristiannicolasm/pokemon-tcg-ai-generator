@@ -1,6 +1,7 @@
 // src/components/CardList.jsx
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
+import LoadingBar from './LoadingBar';
 
 const CardList = ({ expansionId }) => {
   const [cards, setCards] = useState([]);
@@ -26,7 +27,7 @@ const CardList = ({ expansionId }) => {
     fetchCards();
   }, [expansionId]);
 
-  if (loading) return <div>Cargando cartas...</div>;
+  if (loading) return <LoadingBar />;
   if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
   return (
