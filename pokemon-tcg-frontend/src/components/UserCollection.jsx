@@ -17,12 +17,8 @@ const UserCollection = () => {
   const fetchGroupedCards = async () => {
     try {
       setLoading(true);
-      console.log('🔍 Iniciando carga de cartas agrupadas...');
-      console.log('🔑 Token en localStorage:', localStorage.getItem('access_token'));
       
       const response = await axiosInstance.get('/user-cards/grouped/');
-      console.log('✅ Respuesta del servidor:', response.data);
-      console.log('📊 Número de grupos de cartas:', response.data.length);
       
       setGroupedCards(response.data);
       setFilteredCards(response.data);

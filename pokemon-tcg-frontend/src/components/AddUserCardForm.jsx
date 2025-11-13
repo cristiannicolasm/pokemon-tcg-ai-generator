@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AddUserCardForm.css"; 
 import axios from '../axiosInstance';
+import LoadingBar from './LoadingBar';
 
 function AddUserCardForm({ token, onSuccess }) {
   const [form, setForm] = useState({
@@ -18,6 +19,7 @@ function AddUserCardForm({ token, onSuccess }) {
   const [selectedExpansion, setSelectedExpansion] = useState("");
   const [selectedCard, setSelectedCard] = useState(null);
   const [message, setMessage] = useState("");
+  const [loadingCards, setLoadingCards] = useState(false);
 
   useEffect(() => {
   // Lista las expansiones
@@ -32,13 +34,15 @@ function AddUserCardForm({ token, onSuccess }) {
 
 useEffect(() => {
   if (selectedExpansion) {
+    setLoadingCards(true);
     axios.get(`/expansions/${selectedExpansion}/cards/`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setCards(res.data))
       .catch((error) => {
         setMessage("Error cargando cartas: " + (error.response?.status || error.message));
-      });
+      })
+      .finally(() => setLoadingCards(false));
   } else {
     setCards([]); // Limpia las cartas si no hay expansión seleccionada
   }
@@ -115,6 +119,9 @@ useEffect(() => {
           ))}
         </select>
 
+        {/* Barra de carga mientras se cargan las cartas de la expansión seleccionada */}
+        {loadingCards && <LoadingBar />}
+
         <label>Carta:</label>
         <select
           value={selectedCard ?? ""}
@@ -123,6 +130,7 @@ useEffect(() => {
             setSelectedCard(value ? Number(value) : null);
           }}
           data-testid="addcard-card-select"
+          disabled={loadingCards}
         >
           <option value="">Selecciona una carta</option>
           {cards.map(card => (
