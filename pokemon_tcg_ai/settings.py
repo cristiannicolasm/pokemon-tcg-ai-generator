@@ -84,7 +84,8 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", #Ejemplo para tu frontend React
     "http://localhost:4173", #Puerto usado por el frontend en Docker
-    "https://magenta-centaur-b7f085.netlify.app", #netlify
+    "https://magenta-centaur-b7f085.netlify.app", #netlify antiguo
+    "https://pkmn-tcg-generator.netlify.app", #netlify nuevo
 ]
 CORS_ALLOW_HEADERS = [
     "accept",
