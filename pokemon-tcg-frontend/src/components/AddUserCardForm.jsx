@@ -58,17 +58,16 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log('🔍 Submit triggered, selectedCard:', selectedCard);
+  
   setMessage(""); // Limpia mensajes anteriores
 
   if (!selectedCard || selectedCard === "" || selectedCard === null) {
-    console.log('❌ Validation failed: no card selected');
+    
     setMessage("Debes seleccionar una carta.");
     return;
   }
 
-  console.log('✅ Validation passed, proceeding to add card');
-
+ 
   try {
     await axios.post("/user-cards/add/", {
       card: selectedCard,
@@ -119,24 +118,25 @@ useEffect(() => {
           ))}
         </select>
 
-        {/* Barra de carga mientras se cargan las cartas de la expansión seleccionada */}
-        {loadingCards && <LoadingBar />}
 
         <label>Carta:</label>
-        <select
-          value={selectedCard ?? ""}
-          onChange={e => {
-            const value = e.target.value;
-            setSelectedCard(value ? Number(value) : null);
-          }}
-          data-testid="addcard-card-select"
-          disabled={loadingCards}
-        >
-          <option value="">Selecciona una carta</option>
-          {cards.map(card => (
-            <option key={card.id} value={card.id}>{card.name}</option>
-          ))}
-        </select>
+        {loadingCards ? (
+          <LoadingBar />
+        ) : (
+          <select
+            value={selectedCard ?? ""}
+            onChange={e => {
+              const value = e.target.value;
+              setSelectedCard(value ? Number(value) : null);
+            }}
+            data-testid="addcard-card-select"
+          >
+            <option value="">Selecciona una carta</option>
+            {cards.map(card => (
+              <option key={card.id} value={card.id}>{card.name}</option>
+            ))}
+          </select>
+        )}
 
         {selectedCard && (
           <div className="card-preview">
