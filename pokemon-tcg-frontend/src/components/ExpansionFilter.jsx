@@ -83,10 +83,10 @@ const ExpansionFilter = ({ onExpansionChange, selectedExpansion }) => {
         role="combobox"
         className="expansion-select"
       >
-        <option value="all">Todas las cartas ({totalCards})</option>
+        <option value="all">Todas las cartas</option>
         {expansions.map(expansion => (
           <option key={expansion.id} value={expansion.id}>
-            {expansion.name} ({expansion.user_cards_count})
+            {expansion.name}
           </option>
         ))}
       </select>

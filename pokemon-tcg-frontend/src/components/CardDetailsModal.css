@@ -81,6 +81,7 @@
   background: #f8f9fa;
   border-radius: 12px;
   border: 2px solid #e9ecef;
+  align-items: center;
 }
 
 .modal-card-image {
@@ -90,6 +91,7 @@
   border: 2px solid #222;
   box-shadow: 0 4px 16px rgba(34,34,34,0.2);
   flex-shrink: 0;
+  margin-left: 16px;
 }
 
 .summary-info {
@@ -118,8 +120,8 @@
 }
 
 .instances-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 1.5rem;
 }
 
@@ -205,18 +207,19 @@
 /* Instance Details */
 .details-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.4rem;
 }
 
 .detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.8rem;
+  padding: 0.35rem 0.6rem;
   background: #f8f9fa;
   border-radius: 6px;
   border-left: 4px solid #3777c2;
+  min-height: 0;
 }
 
 .detail-item.full-width {
@@ -264,6 +267,17 @@
   font-size: 1em;
   transition: all 0.2s;
   letter-spacing: 0.5px;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 3px solid #e3350d;
+  background: linear-gradient(90deg, #e3350d 0%, #fff 60%, #3777c2 100%);
+  color: #e3350d;
+  border-radius: 13px 13px 0 0;
+  box-shadow: 0 2px 8px rgba(34,34,34,0.10);
+}
 }
 
 .close-modal-btn:hover {
@@ -272,6 +286,13 @@
   box-shadow: 0 3px 8px rgba(34,34,34,0.2);
 }
 
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.8em;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.15);
+  color: #e3350d;
+}
 .close-modal-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
@@ -289,6 +310,27 @@
   .modal-header {
     padding: 1rem 1.5rem;
   }
+.close-btn {
+  background: #fff;
+  border: 2px solid #e3350d;
+  color: #e3350d;
+  font-size: 2em;
+  font-weight: bold;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px rgba(34,34,34,0.10);
+}
+.close-btn:hover {
+  background: #e3350d;
+  color: #fff;
+  border: 2px solid #3777c2;
+}
   
   .modal-header h2 {
     font-size: 1.5em;
