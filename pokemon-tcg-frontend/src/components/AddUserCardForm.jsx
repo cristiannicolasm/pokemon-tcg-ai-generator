@@ -108,7 +108,10 @@ useEffect(() => {
         <label>Expansión:</label>
         <select
           value={selectedExpansion}
-          onChange={e => setSelectedExpansion(e.target.value)}
+          onChange={e => {
+            setSelectedExpansion(e.target.value);
+            setSelectedCard(null);
+          }}
           required
           data-testid="addcard-expansion-select"
         >
@@ -117,7 +120,6 @@ useEffect(() => {
             <option key={exp.api_id} value={exp.api_id}>{exp.name}</option>
           ))}
         </select>
-
 
         <label>Carta:</label>
         {loadingCards ? (
@@ -138,21 +140,38 @@ useEffect(() => {
           </select>
         )}
 
-        {selectedCard && (
-          <div className="card-preview">
+        <div 
+          className="card-preview" 
+          style={{ 
+            background: 'transparent', 
+            border: 'none', 
+            boxShadow: 'none', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            padding: 0, 
+            minHeight: '260px'
+          }}
+        >
+          {selectedCard ? (
             <img 
               src={cards.find(card => card.id === selectedCard)?.image_url_small} 
               alt={cards.find(card => card.id === selectedCard)?.name}
               className="card-preview-image"
+              style={{ height: '220px', width: 'auto', objectFit: 'cover' }}
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/245x342/cccccc/666666?text=No+Image';
               }}
             />
-            <p className="card-preview-name">
-              {cards.find(card => card.id === selectedCard)?.name}
-            </p>
-          </div>
-        )}
+          ) : (
+            <img 
+              src="/whos-that-pokemon.jpg"
+              alt="¿Quién es ese Pokémon?"
+              className="card-preview-image"
+              style={{ height: '220px', width: 'auto', objectFit: 'cover' }}
+            />
+          )}
+        </div>
       </div>
 
       <div className="section">
