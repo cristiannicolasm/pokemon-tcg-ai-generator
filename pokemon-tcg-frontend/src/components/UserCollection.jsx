@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import axiosInstance from '../axiosInstance';
 import ExpansionFilter from './ExpansionFilter';
 import CardDetailsModal from './CardDetailsModal';
 import './UserCollection.css';
 
-const UserCollection = () => {
+function UserCollection({ refreshFlag }) {
   const [groupedCards, setGroupedCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -91,6 +91,10 @@ const UserCollection = () => {
       console.error('Error updating favorite status:', err);
     }
   };
+
+  useEffect(() => {
+    fetchGroupedCards();
+  }, [refreshFlag]); // <-- se ejecuta cada vez que refreshFlag cambia
 
   if (loading) return <div>Cargando tu colección...</div>;
   if (error) return <div>Error: {error}</div>;

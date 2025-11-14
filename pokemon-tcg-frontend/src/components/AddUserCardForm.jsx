@@ -87,7 +87,7 @@ useEffect(() => {
       notes: ""
     });
     setSelectedCard("");
-    if (onSuccess) onSuccess();
+    if (onSuccess) onSuccess(); // Notifica al padre
   } catch (err) {
     if (err.response && err.response.status === 400) {
       setMessage("Ya tienes esta carta con esos atributos o los datos son inválidos.");
