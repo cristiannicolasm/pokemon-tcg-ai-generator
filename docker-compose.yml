@@ -3,7 +3,7 @@
 services:
   web: # Nombre de tu servicio Django (puedes llamarlo app, backend, etc.)
     build: . # Le dice a Docker Compose que construya la imagen desde el Dockerfile en el directorio actual
-    command: runserver 0.0.0.0:8000 # El comando que ejecuta Django
+    command: python manage.py runserver 0.0.0.0:8000 # El comando que ejecuta Django
     volumes:
       - .:/app # Monta el directorio actual del proyecto en /app dentro del contenedor
                # Esto permite que los cambios en tu código local se reflejen sin reconstruir la imagen

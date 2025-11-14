@@ -17,6 +17,14 @@ function App() {
   const [currentPage, setCurrentPage] = useState('login'); 
   const [selectedExpansionId, setSelectedExpansionId] = useState(null);
 
+  // Estado para forzar la recarga de la colección de cartas
+  const [refreshFlag, setRefreshFlag] = useState(0);
+
+  // Función que se llama cuando se agrega una carta
+  const handleCardAdded = () => {
+    setRefreshFlag(f => f + 1);
+  };
+
   // Esta función se llama desde el componente Login al iniciar sesión con éxito.
   const handleLoginSuccess = (token) => {
     setAuthToken(token);
@@ -57,9 +65,9 @@ function App() {
             </button>
           </header>
           {/*Formulario para añadir carta */}
-          <AddUserCardForm token={authToken} />
+          <AddUserCardForm token={authToken} onSuccess={handleCardAdded} />
           {/* Aquí muestra la colección */}
-          <UserCollection token={authToken} />
+          <UserCollection token={authToken} refreshFlag={refreshFlag} />
           {/* <ExpansionSelector onSelectExpansion={setSelectedExpansionId} /> */}
           {selectedExpansionId && <CardList expansionId={selectedExpansionId} />}
         </>
