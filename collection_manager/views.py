@@ -36,12 +36,30 @@ class UserCardCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated] # ¡Solo usuarios autenticados pueden usar este endpoint!
 
     def perform_create(self, serializer):
-        try:
-            serializer.save(user=self.request.user)
-        except IntegrityError as exc:
-            raise serializers.ValidationError(
-                {"detail": "Ya tienes esta carta con esos atributos en tu colección."}
-            ) from exc
+        # Extrae los datos relevantes para buscar duplicados
+        user = self.request.user
+        card = serializer.validated_data['card']
+        language = serializer.validated_data.get('language', 'EN')
+        is_holographic = serializer.validated_data.get('is_holographic', False)
+        condition = serializer.validated_data.get('condition', 'NM')
+        is_first_edition = serializer.validated_data.get('is_first_edition', False)
+        quantity = serializer.validated_data.get('quantity', 1)
+
+        existing = UserCard.objects.filter(
+            user=user,
+            card=card,
+            language=language,
+            is_holographic=is_holographic,
+            condition=condition,
+            is_first_edition=is_first_edition
+        ).first()
+
+        if existing:
+            existing.quantity += quantity
+            existing.save()
+            serializer.instance = existing
+        else:
+            serializer.save(user=user)
 
 # (Opcional, pero muy recomendado para la prueba y futuro)
 # Esta vista te permitirá listar todas las cartas que posee un usuario específico.
