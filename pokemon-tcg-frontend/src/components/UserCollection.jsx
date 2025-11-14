@@ -106,18 +106,15 @@ function UserCollection({ refreshFlag }) {
   return (
     <div className="user-collection">
       <h2>Mi Colección Pokémon</h2>
-      
       <ExpansionFilter 
         onExpansionChange={handleExpansionChange}
         selectedExpansion={selectedExpansion}
       />
-      
       <div className="collection-info">
         <p>
           Mostrando: <strong>{selectedExpansionName}</strong> ({totalCards} carta{totalCards !== 1 ? 's' : ''} en {totalGroups} tipo{totalGroups !== 1 ? 's' : ''})
         </p>
       </div>
-
       {filteredCards.length === 0 ? (
         <div className="no-cards">
           {selectedExpansion === 'all' 
@@ -127,11 +124,16 @@ function UserCollection({ refreshFlag }) {
       ) : (
         <div className="cards-grid">
           {filteredCards.map((cardGroup) => (
-            <div key={`${cardGroup.card_id}_${cardGroup.expansion_id}`} className="user-card-item" data-testid="usercard-item">
-              {/* Imagen */}
+            <div
+              key={`${cardGroup.card_id}_${cardGroup.expansion_id}`}
+              className="user-card-item"
+              data-testid="usercard-item"
+              onClick={() => showCardDetails(cardGroup)}
+              style={{ cursor: 'pointer', position: 'relative' }}
+            >
               <div className="card-image-container">
-                <img 
-                  src={cardGroup.card_image} 
+                <img
+                  src={cardGroup.card_image}
                   alt={cardGroup.card_name}
                   className="card-image"
                   onError={(e) => {
@@ -139,33 +141,29 @@ function UserCollection({ refreshFlag }) {
                   }}
                 />
               </div>
-              
-              {/* Información resumida */}
-              <div className="card-info">
-                <h3>{cardGroup.card_name}</h3>
-                <p><strong>Expansión:</strong> {cardGroup.expansion_name}</p>
-                <p><strong>Cantidad Total:</strong> {cardGroup.total_quantity}</p>
-                <p><strong>Instancias:</strong> {cardGroup.instances_count}</p>
-                <p><strong>Favorita:</strong> {cardGroup.is_any_favorite ? '⭐' : '☆'}</p>
+              <div className="card-info" style={{ textAlign: 'center', padding: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3em', width: '100%' }}>
+                  <h3 style={{ margin: 0 }}>{cardGroup.card_name}</h3>
+                  <span className="card-quantity" style={{ fontWeight: 600, color: '#3b4cca', fontSize: '0.95em' }}>x{cardGroup.total_quantity}</span>
+                </div>
               </div>
-              
-              {/* Acciones */}
-              <div className="card-actions">
-                <button
-                  className="details-btn"
-                  onClick={() => showCardDetails(cardGroup)}
-                  data-testid="usercard-details-btn"
-                >
-                  VER DETALLES
-                </button>
-                <button
-                  className={`favorite-btn ${cardGroup.is_any_favorite ? 'favorited' : ''}`}
-                  onClick={() => toggleGroupFavorite(cardGroup)}
-                  data-testid="usercard-favorite-btn"
-                >
-                  {cardGroup.is_any_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}
-                </button>
-              </div>
+              <button
+                className="details-btn"
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  bottom: 18,
+                  transform: 'translateX(-50%)',
+                  opacity: 0,
+                  pointerEvents: 'none',
+                  transition: 'opacity 0.2s',
+                  zIndex: 2
+                }}
+                onClick={e => { e.stopPropagation(); showCardDetails(cardGroup); }}
+                data-testid="usercard-details-btn"
+              >
+                Ver Detalle
+              </button>
             </div>
           ))}
         </div>
